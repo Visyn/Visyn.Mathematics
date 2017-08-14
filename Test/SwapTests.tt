@@ -1,0 +1,54 @@
+﻿<#@ include file="../Lib/T4/NumericTypes.ttinclude" #>
+using NUnit.Framework;
+using System.Threading;
+using Visyn.Mathematics.Rand;
+
+namespace Visyn.Mathmatics.Test
+{
+	public class SwapTests
+	{
+<# foreach (var type in numbericTypes) { #>
+        [Test()]
+        public void SwapTest_<#= type.Name #>()
+        {
+			IRandom random = Rng<FastRng>.ThreadSafeRandom(null,Thread.CurrentThread.ManagedThreadId);
+		    var values1 = random.ExclusiveList(0, 1000000,100);
+            var values2 = random.ExclusiveList(0, 1000000,100);
+
+            for(int i=0;i<100;i++)
+            {
+                <#= type.Name #> value1 = (<#= type.Name #>)values1[i];
+                <#= type.Name #> value2 = (<#= type.Name #>)values2[i];
+
+                {
+                    <#= type.Name #> temp1 = value1;
+                    <#= type.Name #> temp2 = value2;
+
+                    Numbers.Swap(ref temp1, ref temp2);
+                    Assert.AreEqual(value1, temp2, $"Swap({value1},{value2}) Failed {temp1},{temp2}");
+                    Assert.AreEqual(value2, temp1, $"Swap({value1},{value2}) Failed {temp1},{temp2}");
+                }
+                {
+                    <#= type.Name #> temp1 = value1;
+                    <#= type.Name #> temp2 = value2;
+
+                    Numbers.SwapIfLess(ref temp1, ref temp2);
+                    Assert.GreaterOrEqual(temp1,temp2, $"SwapIfLess({value1},{value2}) Failed {temp1},{temp2}");
+                }
+                {
+                    <#= type.Name #> temp1 = value1;
+                    <#= type.Name #> temp2 = value2;
+
+                    Numbers.SwapIfGreater(ref temp1, ref temp2);
+                    Assert.LessOrEqual(temp1, temp2, $"SwapIfLess({value1},{value2}) Failed {temp1},{temp2}");
+                }
+			}
+		}
+<#
+	} #>
+	}
+}
+
+
+
+

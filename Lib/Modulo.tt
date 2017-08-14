@@ -1,0 +1,26 @@
+﻿<#@ include file="./T4/NumericTypes.ttinclude" #>
+
+namespace Visyn.Mathematics 
+{
+	public static partial class Numbers
+	{
+<# foreach (var type in numbericTypes) { #>
+        /// <summary>
+        /// value % mod limited to positive values
+        /// </summary>
+        /// <param name="value">Value to evaluate</param>
+        /// <param name="mod">modulo</param>
+        /// <returns>Value % mod [0,mod)</returns>
+		public static <#= type.Name #> ModuloPositive (<#= type.Name #> value, <#= type.Name #> mod) 
+		{
+<# if(unsignedTypes.Contains(type)) { #>
+			return (<#= type.Name #>)(value % mod);		// Unsigned, simply return result of Mod 
+<# } else { #>
+			<#= type.Name #> result = (<#= type.Name #>)(value % mod);
+			return result < 0 ? (<#= type.Name #>)(result + mod) : result;		// Signed, check for < 0
+<# } #>
+		}
+
+<# } #>
+	}
+}

@@ -1,0 +1,33 @@
+﻿<#@ include file="./T4/NumericTypes.ttinclude" #>
+
+namespace Visyn.Mathematics 
+{ 
+	public static partial class Numbers
+	{
+<# foreach (var type in numbericTypes) { #>
+        /// <summary>
+        /// Divide with remainder retaining underlying type
+        /// </summary>
+        /// <param name="dividend"></param>
+        /// <param name="divisor"></param>
+        /// <param name="remainder"></param>
+        /// <returns></returns>
+        [Obsolete("Use Divide(...).  Identical implementation...",true)]
+		public static <#= type.Name #> Div(<#= type.Name #> dividend, <#= type.Name #> divisor, out <#= type.Name #> remainder)
+        {
+			// ReSharper disable once CompareOfFloatsByEqualityOperator
+			if(divisor == 0) throw new DivideByZeroException();
+            double result = (double)dividend/(double)divisor;  // 82/10=8.2
+<# if(floatingPointTypes.Contains(type)) { #>
+			<#= type.Name #> quotient = (<#= type.Name #>) (Int64)(result);  // 8
+            remainder = (<#= type.Name #>)((<#= type.Name #>)(result - (double)quotient)*divisor);  // (8.2-8)*10=0.2*10=2
+<#} else {#>
+			<#= type.Name #> quotient = (<#= type.Name #>)(result);  // 8
+            remainder = (<#= type.Name #>)Math.Round((result - quotient)*divisor);  // (8.2-8)*10=0.2*10=2
+<#}#>
+            return quotient;
+        }
+
+<#} #>
+	}
+}

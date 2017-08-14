@@ -1,0 +1,134 @@
+﻿<#@ include file="../../Lib/T4/NumericTypes.ttinclude" #>
+using System.Collections.Generic;
+using NUnit.Framework;
+using Visyn.Public.Exceptions;
+using Visyn.Mathematics.Comparison;
+
+namespace Visyn.Mathematics.Test.Comparison 
+{ 
+	[TestFixture]
+	public class CompareNumbersTolerancedTest
+	{
+
+		#region numbericTypes
+<# foreach (var type in numbericTypes) { #>
+
+		// <#= type.Name #>
+		[Test]
+		public void Type<#= type.Name #>_Generic()
+		{
+			// Note: the CompareNumbers.Toleranced<<#= type.Name #>> constructor will direct call to non-generic implementation
+			// because the generic type argument matches the tolerance type.  This is a more efficient implementation
+			<#= type.Name #> tolerance = (<#= type.Name #>)10;
+		    var comparer = CompareNumbers.Toleranced<<#= type.Name #>>(tolerance);
+
+			Assert.Zero(comparer.Compare((<#= type.Name #>)7,(<#= type.Name #>)2));
+			Assert.Zero(comparer.Compare((<#= type.Name #>)107,(<#= type.Name #>)100));
+
+
+			CompareNumbersSupport.MatchesDefaultComparer(comparer, (<#= type.Name #>) 99, (<#= type.Name #>) 7);
+			CompareNumbersSupport.MatchesDefaultComparer(comparer, (<#= type.Name #>) 7, (<#= type.Name #>) 99);
+			CompareNumbersSupport.MatchesDefaultComparer(comparer, (<#= type.Name #>) 12, (<#= type.Name #>) 12);
+        }
+
+		[Test]
+		public void Type<#= type.Name #>_NotGeneric()
+		{
+			<#= type.Name #> tolerance = (<#= type.Name #>)10;
+		    var comparer = CompareNumbers.Toleranced(tolerance);
+
+			Assert.Zero(comparer.Compare((<#= type.Name #>)7,(<#= type.Name #>)2));
+			Assert.Zero(comparer.Compare((<#= type.Name #>)107,(<#= type.Name #>)100));
+
+
+			CompareNumbersSupport.MatchesDefaultComparer(comparer, (<#= type.Name #>) 99, (<#= type.Name #>) 7);
+			CompareNumbersSupport.MatchesDefaultComparer(comparer, (<#= type.Name #>) 7, (<#= type.Name #>) 99);
+			CompareNumbersSupport.MatchesDefaultComparer(comparer, (<#= type.Name #>) 12, (<#= type.Name #>) 12);
+        }
+
+		[Test]
+		public void Type<#= type.Name #>_Limits()
+		{
+			<#= type.Name #> tolerance = (<#= type.Name #>)10;
+		    var comparer = CompareNumbers.Toleranced<<#= type.Name #>>(tolerance);
+
+			Assert.Zero(comparer.Compare((<#= type.Name #>)1,(<#= type.Name #>)11));
+			Assert.Zero(comparer.Compare((<#= type.Name #>)11,(<#= type.Name #>)1));
+			CompareNumbersSupport.MatchesDefaultComparer(comparer, (<#= type.Name #>) 1, (<#= type.Name #>) 12);
+			CompareNumbersSupport.MatchesDefaultComparer(comparer, (<#= type.Name #>) 12, (<#= type.Name #>) 1);
+        }
+
+		// <#= type.Name #> tests involving change in type (i.e. compare int and double as a double w/ double tolerance)
+		[Test]
+		public void Type<#= type.Name #>_GenericMixedTypeNumbers()
+		{
+			// Note: the CompareNumbers.Toleranced<<#= type.Name #>> constructor will direct call to non-generic implementation
+			// because the generic type argument matches the tolerance type.  More efficient implementation
+			<#= type.Name #> tolerance = (<#= type.Name #>)10;
+		    var comparer = CompareNumbers.Toleranced<object>(tolerance);
+
+			// First try numbers with same type as tolerance...
+			Assert.Zero(comparer.Compare((<#= type.Name #>)7,(<#= type.Name #>)2));
+			Assert.Zero(comparer.Compare((<#= type.Name #>)107,(<#= type.Name #>)100));
+			// Now try some different types...
+<# foreach (var paramType in numbericTypes) { #>
+			// Tolerance Type = <#= type.Name #> Parameter type == <#= paramType.Name #>
+			Assert.Zero(comparer.Compare((<#= paramType.Name #>)8,(<#= paramType.Name #>)1));
+			Assert.Zero(comparer.Compare((<#= paramType.Name #>)111,(<#= paramType.Name #>)108));
+			Assert.Zero(comparer.Compare((<#= paramType.Name #>)77,(<#= paramType.Name #>)82));
+			CompareNumbersSupport.MatchesDefaultComparer_TypeT(comparer, (<#= paramType.Name #>) 99, (<#= paramType.Name #>) 7 , 99 , 7);
+			CompareNumbersSupport.MatchesDefaultComparer_TypeT(comparer, (<#= paramType.Name #>) 99, (<#= paramType.Name #>) 7 , 99 , 7);
+<#} #>
+        }
+
+		// <#= type.Name #>
+		[Test]
+		public void Type<#= type.Name #>_MiscTypesToCompare()
+		{
+			// Note: the CompareNumbers.Toleranced<<#= type.Name #>> constructor will direct call to non-generic implementation
+			// because the generic type argument matches the tolerance type.  More efficient implementation
+			<#= type.Name #> tolerance = (<#= type.Name #>)10;
+		    var comparer = CompareNumbers.Toleranced<object>(tolerance);
+
+			// Now try some different types...
+<# foreach (var paramType in numbericTypes) { #>
+			// Tolerance Type = <#= type.Name #> Parameter type == <#= paramType.Name #>
+			Assert.Zero(comparer.Compare((<#= paramType.Name #>)8,(double)1));
+			Assert.Zero(comparer.Compare((int)111,(<#= paramType.Name #>)108));
+			Assert.Zero(comparer.Compare((<#= paramType.Name #>)77,"82"));
+			CompareNumbersSupport.MatchesDefaultComparer_TypeT(comparer, (<#= paramType.Name #>) 99, (<#= paramType.Name #>) 7,99,7);
+			CompareNumbersSupport.MatchesDefaultComparer_TypeT(comparer,    "99", (double) 7, 99,  7);
+			CompareNumbersSupport.MatchesDefaultComparer_TypeT(comparer, (int) 7,       "99",  7, 99);
+<#} #>
+        }
+
+
+
+<#} #>
+
+		<# foreach (var type in signedTypes) { #>
+
+		<#if(type == typeof(char)) continue;#>
+
+		// <#= type.Name #> - Signed number tests (comparing non-positive values)
+		[Test]
+		public void SignedType<#= type.Name #>()
+		{
+			<#= type.Name #> tolerance = (<#= type.Name #>)10;
+		    var comparer = CompareNumbers.Toleranced<<#= type.Name #>>(tolerance);
+
+			<#= type.Name #> a = -107;
+			<#= type.Name #> b = -100;
+
+			Assert.Zero(comparer.Compare(a,b));
+			Assert.Zero(comparer.Compare(b,a));
+
+			CompareNumbersSupport.MatchesDefaultComparer(comparer, (<#= type.Name #>) (-99), (<#= type.Name #>) ( -7));
+			CompareNumbersSupport.MatchesDefaultComparer(comparer, (<#= type.Name #>) ( -7), (<#= type.Name #>) (-99));
+			CompareNumbersSupport.MatchesDefaultComparer(comparer, (<#= type.Name #>) (-99), (<#= type.Name #>) (  7));
+			CompareNumbersSupport.MatchesDefaultComparer(comparer, (<#= type.Name #>) ( -7), (<#= type.Name #>) ( 99));
+        }
+<#} #>
+		#endregion
+	}
+}

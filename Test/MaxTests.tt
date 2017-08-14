@@ -1,0 +1,81 @@
+﻿<#@ include file="../Lib/T4/NumericTypes.ttinclude" #>
+using NUnit.Framework;
+using System.Linq;
+using System.Collections.Generic;
+using Visyn.Mathematics;
+using Visyn.Mathematics.Rand;
+
+namespace Visyn.Mathmatics.Test
+{
+	public class MaxTests
+	{
+		private static readonly IRandom random = Rng<FastRng>.Unique(null);
+<# foreach (var type in numbericTypes) { #>
+		// Max Tests for Type: <#= type.Name #>
+<# if(type != typeof(char))  { #>
+        private static readonly IList<<#= type.Name #>> listA<#= type.Name #> = random.ExclusiveList<<#= type.Name #>>(<#= type.Name #>.MinValue/2, <#= type.Name #>.MaxValue/2,100);
+        private static readonly IList<<#= type.Name #>> listB<#= type.Name #> = random.ExclusiveList<<#= type.Name #>>(<#= type.Name #>.MinValue/2, <#= type.Name #>.MaxValue/2,100);
+<#} else {#>
+        private static readonly IList<<#= type.Name #>> listA<#= type.Name #> = random.ExclusiveList<int>(<#= type.Name #>.MinValue, <#= type.Name #>.MaxValue,100).Select((i)=>(char)i).ToList();
+        private static readonly IList<<#= type.Name #>> listB<#= type.Name #> = random.ExclusiveList<int>(<#= type.Name #>.MinValue, <#= type.Name #>.MaxValue,100).Select((i)=>(char)i).ToList();
+<#}#>
+        [Test()]
+        public void MaxTest_<#= type.Name #>()
+        {
+            for (int i=0;i<100;i++)
+            {
+                var a = (<#= type.Name #>)listA<#= type.Name #>[i];
+                var b = (<#= type.Name #>)listB<#= type.Name #>[i];
+				Assert.AreEqual(Math.Max(a,b),Numbers.Max(a,b),$"#[{i}] a:{a} b:{b} Max:{Numbers.Max(a,b)}");
+				Assert.AreEqual(Math.Max(a, b), Numbers.Max(b, a),$"#[{i}] a:{a} b:{b} Max:{Numbers.Max(b,a)}");
+			}
+		}
+
+		[Test]
+        public void MaxTest_Nullable<#= type.Name #>()
+        {
+            for (int i=0;i<100;i++)
+            {
+                var a = (<#= type.Name #>)listA<#= type.Name #>[i];
+                var b = (<#= type.Name #>)listB<#= type.Name #>[i];
+                <#= type.Name #>? nullA = a;
+                <#= type.Name #>? nullB = b;
+                Assert.AreEqual(Math.Max(a, b), Numbers.Max(nullA, nullB));
+                Assert.AreEqual(Math.Max(a, b), Numbers.Max(nullB, nullA));
+                Assert.AreEqual(Math.Max(nullA.Value, nullB.Value), Numbers.Max(nullA, nullB));
+			}
+		}
+
+		[Test]
+        public void MaxTest_Nullable<#= type.Name #>_WithNull()
+        {
+            for (int i=0;i<100;i++)
+            {
+                var a = (<#= type.Name #>)listA<#= type.Name #>[i];
+                <#= type.Name #>? nullA = a;
+                Assert.AreEqual(Math.Max(a, <#= type.Name #>.MinValue), Numbers.Max(nullA, null),$"#[{i}] a:{nullA} b:{null} Max:{Numbers.Max(nullA, null)}");
+                Assert.AreEqual(Math.Max(a, <#= type.Name #>.MinValue), Numbers.Max(null, nullA),$"#[{i}] a:{nullA} b:{null} Max:{Numbers.Max(null, nullA)}");
+                Assert.AreEqual(Math.Max(nullA.Value, <#= type.Name #>.MinValue), Numbers.Max(nullA, null),$"#[{i}] a:{nullA} b:{null} Max:{Numbers.Max(nullA, null)}");
+			}
+		}
+
+				[Test]
+        public void MaxTest_Nullable<#= type.Name #>_WithDefault()
+        {
+            for (int i=0;i<100;i++)
+            {
+                var a = (<#= type.Name #>)listA<#= type.Name #>[i];
+                <#= type.Name #>? nullA = a;
+                Assert.AreEqual(Math.Max(a, (<#= type.Name #>)0), Numbers.Max(nullA, null,(<#= type.Name #>)0),$"#[{i}] a:{nullA} b:{null} Max:{Numbers.Max(nullA, null,(<#= type.Name #>)0)}");
+                Assert.AreEqual(Math.Max(a, (<#= type.Name #>)0), Numbers.Max(null, nullA,(<#= type.Name #>)0),$"#[{i}] a:{nullA} b:{null} Max:{Numbers.Max(null, nullA,(<#= type.Name #>)0)}");
+                Assert.AreEqual(Math.Max(nullA.Value, (<#= type.Name #>)0), Numbers.Max(nullA, null,(<#= type.Name #>)0),$"#[{i}] a:{nullA} b:{null} Max:{Numbers.Max(nullA, null,(<#= type.Name #>)0)}");
+			}
+		}
+
+<#	} #>
+	}
+}
+
+
+
+

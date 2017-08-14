@@ -1,0 +1,250 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\..\packages\Microsoft.Net.Compilers.2.2.0\build\Microsoft.Net.Compilers.props" Condition="Exists('..\..\packages\Microsoft.Net.Compilers.2.2.0\build\Microsoft.Net.Compilers.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <MinimumVisualStudioVersion>10.0</MinimumVisualStudioVersion>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{72010055-3D6E-4DA8-ACEE-AEF0E78E46A7}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Visyn.Mathematics</RootNamespace>
+    <AssemblyName>Visyn.Mathematics</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Profile7</TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Clamp.t4.cs">
+      <DependentUpon>Clamp.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="ColorStructExtensions.cs" />
+    <Compile Include="Comparison\INumberConverter.cs" />
+    <Compile Include="Comparison\NumberComparer.t4.cs">
+      <DependentUpon>NumberComparer.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Comparison\NumberConverter.Boolean.cs" />
+    <Compile Include="Comparison\NumberConverter.DateTime.cs" />
+    <Compile Include="Comparison\NumberConverter.t4.cs">
+      <DependentUpon>NumberConverter.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Comparison\NumberConverter.TimeSpan.cs" />
+    <Compile Include="Div.t4.cs">
+      <DependentUpon>Div.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Divide.t4.cs">
+      <DependentUpon>Divide.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Enumerables\EnumerableMathExtensions.cs" />
+    <Compile Include="EqualsToleranced.cs" />
+    <Compile Include="Geometry\line.cs" />
+    <Compile Include="Geometry\Polygon.cs" />
+    <Compile Include="Geometry\Range.cs" />
+    <Compile Include="Geometry\RangeExtensions.t4.cs">
+      <DependentUpon>RangeExtensions.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Geometry\Triangle.cs" />
+    <Compile Include="IEqualsToleranced.cs" />
+    <Compile Include="INumeric.cs" />
+    <Compile Include="IPointExtensions.cs" />
+    <Compile Include="IRange.cs" />
+    <Compile Include="IsNumeric.t4.cs">
+      <DependentUpon>IsNumeric.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="IStatistics.cs" />
+    <Compile Include="Collection\CollectionAverage.cs" />
+    <Compile Include="Collection\CollectionMathExtensions.cs" />
+    <Compile Include="Collection\CollectionMin.cs" />
+    <Compile Include="MathExtensions.cs" />
+    <Compile Include="Matrix\Matrix2dUniform.cs" />
+    <Compile Include="Max.t4.cs">
+      <DependentUpon>Max.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Mean.t4.cs">
+      <DependentUpon>Mean.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Min.t4.cs">
+      <DependentUpon>Min.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Modulo.t4.cs">
+      <DependentUpon>Modulo.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="PointExtensions.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Rand\BoxMuller.cs" />
+    <Compile Include="Rand\FastRng.cs" />
+    <Compile Include="Rand\IRandom.cs" />
+    <Compile Include="Rand\MersenneTwister.cs" />
+    <Compile Include="Rand\MT19937.cs" />
+    <Compile Include="Rand\RandomBase.cs" />
+    <Compile Include="Rand\RandomByte.cs" />
+    <Compile Include="Rand\RandomDateTime.cs" />
+    <Compile Include="Rand\RandomDecimal.cs" />
+    <Compile Include="Rand\RandomDouble.cs" />
+    <Compile Include="Rand\RandomExtensions.cs" />
+    <Compile Include="Rand\RandomInt16.cs" />
+    <Compile Include="Rand\RandomInt64.cs" />
+    <Compile Include="Rand\RandomSingle.cs" />
+    <Compile Include="Rand\RandomUInt16.cs" />
+    <Compile Include="Rand\RandomUInt32.cs" />
+    <Compile Include="Rand\RandomUInt64.cs" />
+    <Compile Include="Rand\Rng.cs" />
+    <Compile Include="Rand\SystemRandom.cs" />
+    <Compile Include="Rand\Ziggurat.cs" />
+    <Compile Include="RangedExtensions.t4.cs">
+      <DependentUpon>RangedExtensions.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Redzen\Numerics\BoxMullerGaussianSampler.cs" />
+    <Compile Include="Redzen\Numerics\DiscreteDistribution.cs" />
+    <Compile Include="Redzen\Numerics\DiscreteDistributionUtils.cs" />
+    <Compile Include="Redzen\Numerics\FastRandom.cs" />
+    <Compile Include="Redzen\Numerics\FrequencyDistributionData.cs" />
+    <Compile Include="Redzen\Numerics\HistogramData.cs" />
+    <Compile Include="Redzen\Numerics\NumericsUtils.cs" />
+    <Compile Include="Redzen\Numerics\XorShiftRandom.cs" />
+    <Compile Include="Redzen\Numerics\ZigguratGaussianSampler.cs" />
+    <Compile Include="Redzen\Sorting\ParallelSort.cs" />
+    <Compile Include="Redzen\Sorting\SortUtils.cs" />
+    <Compile Include="Statistics.cs" />
+    <Compile Include="StatisticsExtensions.cs" />
+    <Compile Include="Swap.cs" />
+    <Compile Include="Trigonometry\Angle.cs" />
+    <Compile Include="Variance.t4.cs">
+      <DependentUpon>Variance.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Vector3D.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="WindowsBase">
+      <HintPath>C:\Windows\Microsoft.NET\Framework\v4.0.30319\WPF\WindowsBase.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Visyn.Public\Lib\Visyn.Public.csproj">
+      <Project>{aba4963b-56ba-4b42-8c2a-17be811e5f8e}</Project>
+      <Name>Visyn.Public</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+    <None Include="T4\NumericTypes.ttinclude" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Clamp.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Clamp.t4.cs</LastGenOutput>
+    </Content>
+    <Content Include="Comparison\NumberComparer.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>NumberComparer.t4.cs</LastGenOutput>
+    </Content>
+    <Content Include="Comparison\NumberConverter.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>NumberConverter.t4.cs</LastGenOutput>
+    </Content>
+    <Content Include="Div.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Div.t4.cs</LastGenOutput>
+    </Content>
+    <Content Include="Divide.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Divide.t4.cs</LastGenOutput>
+    </Content>
+    <Content Include="Geometry\RangeExtensions.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>RangeExtensions.t4.cs</LastGenOutput>
+    </Content>
+    <Content Include="IsNumeric.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>IsNumeric.t4.cs</LastGenOutput>
+    </Content>
+    <Content Include="Max.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Max.t4.cs</LastGenOutput>
+    </Content>
+    <Content Include="Mean.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Mean.t4.cs</LastGenOutput>
+    </Content>
+    <Content Include="Min.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Min.t4.cs</LastGenOutput>
+    </Content>
+    <Content Include="Modulo.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Modulo.t4.cs</LastGenOutput>
+    </Content>
+    <Content Include="RangedExtensions.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>RangedExtensions.t4.cs</LastGenOutput>
+    </Content>
+    <Content Include="Variance.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Variance.t4.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\packages\Microsoft.Net.Compilers.2.2.0\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.Net.Compilers.2.2.0\build\Microsoft.Net.Compilers.props'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

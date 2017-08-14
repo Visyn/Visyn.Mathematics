@@ -1,0 +1,136 @@
+﻿<#@ include file="../../Lib/T4/NumericTypes.ttinclude" #>
+using System.Collections.Generic;
+using NUnit.Framework;
+using Visyn.Public.Comparison;
+using Visyn.Mathematics.Comparison;
+
+namespace Visyn.Mathematics.Test.Comparison 
+{
+	public static class CompareNumbersSupport
+	{
+		    private static NumberConverter visyn = NumberConverter.Instance;
+<# foreach (var type in numbericTypes) { #>
+
+#region <#= type.Name #> // <#= type.Name #>
+		public static void MatchesDefaultComparer(CustomComparer<<#= type.Name #>> custom, <#= type.Name #> a,<#= type.Name #> b)
+        {
+            var defaultComparer = Comparer<<#= type.Name #>>.Default;
+            var defaultResult = defaultComparer.Compare(a, b);
+			var defaultOpposite = defaultComparer.Compare(b, a);
+<#if(type == typeof(byte) || type == typeof(char) || type == typeof(Int16) || type == typeof(UInt16)) {#>
+			defaultResult = defaultResult == 0 ? 0 : (defaultResult > 0 ? 1 : -1);
+			defaultOpposite = defaultOpposite == 0 ? 0 : (defaultOpposite > 0 ? 1 : -1);
+<#} #>
+            // Verify Comparer.Default results...
+			Assert.AreEqual(Comparer<int>.Default.Compare(Convert.ToInt32(a), Convert.ToInt32(b)), defaultResult);
+            Assert.AreEqual(Comparer<int>.Default.Compare(Convert.ToInt32(b), Convert.ToInt32(a)), defaultOpposite);
+<#if(type != typeof(char)) {#>
+            Assert.AreEqual(Comparer<double>.Default.Compare(Convert.ToDouble(a), Convert.ToDouble(b)), defaultResult);
+            Assert.AreEqual(Comparer<double>.Default.Compare(Convert.ToDouble(b), Convert.ToDouble(a)), defaultOpposite);
+<#} #>
+			// Verify Visyn.NumberConverter .Default results... (note this works with char<->double)
+			Assert.AreEqual(Comparer<int>.Default.Compare(visyn.ToInt32(a), visyn.ToInt32(b)), defaultResult);
+            Assert.AreEqual(Comparer<int>.Default.Compare(visyn.ToInt32(b), visyn.ToInt32(a)), defaultOpposite);
+			Assert.AreEqual(Comparer<double>.Default.Compare(visyn.ToDouble(a), visyn.ToDouble(b)), defaultResult);
+            Assert.AreEqual(Comparer<double>.Default.Compare(visyn.ToDouble(b), visyn.ToDouble(a)), defaultOpposite);
+
+            Assert.Zero(defaultResult + defaultOpposite);
+			// Verify CustomComparer results...
+            Assert.Zero(defaultResult + defaultOpposite);
+			Assert.AreEqual(defaultOpposite, custom.Compare(b,a));
+            Assert.AreEqual(defaultResult, custom.Compare(a,b));
+        }
+
+		public static void MatchesDefaultComparer_TypeT<T>(CustomComparer<T> custom, object oA, object oB, <#= type.Name #> a,<#= type.Name #> b)
+        {
+			Assert.AreEqual(Convert.ToInt32(oA),Convert.ToInt32(a),"Unit test parameter mis-match oA does not equal a");
+			Assert.AreEqual(Convert.ToInt32(oB),Convert.ToInt32(b),"Unit test parameter mis-match oB does not equal b");
+            var defaultComparer = Comparer<<#= type.Name #>>.Default;
+            var defaultResult = defaultComparer.Compare(a, b);
+			var defaultOpposite = defaultComparer.Compare(b, a);
+<#if(type == typeof(byte) || type == typeof(char) || type == typeof(Int16) || type == typeof(UInt16)) {#>
+			defaultResult = defaultResult == 0 ? 0 : (defaultResult > 0 ? 1 : -1);
+			defaultOpposite = defaultOpposite == 0 ? 0 : (defaultOpposite > 0 ? 1 : -1);
+<#} #>
+            // Verify Comparer.Default results...
+			Assert.AreEqual(Comparer<int>.Default.Compare(Convert.ToInt32(a), Convert.ToInt32(b)), defaultResult);
+            Assert.AreEqual(Comparer<int>.Default.Compare(Convert.ToInt32(b), Convert.ToInt32(a)), defaultOpposite);
+<#if(type != typeof(char)) {#>
+            Assert.AreEqual(Comparer<double>.Default.Compare(Convert.ToDouble(a), Convert.ToDouble(b)), defaultResult);
+            Assert.AreEqual(Comparer<double>.Default.Compare(Convert.ToDouble(b), Convert.ToDouble(a)), defaultOpposite);
+<#} #>
+			// Verify Visyn.NumberConverter .Default results... (note this works with char<->double)
+			Assert.AreEqual(Comparer<int>.Default.Compare(visyn.ToInt32(a), visyn.ToInt32(b)), defaultResult);
+            Assert.AreEqual(Comparer<int>.Default.Compare(visyn.ToInt32(b), visyn.ToInt32(a)), defaultOpposite);
+			Assert.AreEqual(Comparer<double>.Default.Compare(visyn.ToDouble(a), visyn.ToDouble(b)), defaultResult);
+            Assert.AreEqual(Comparer<double>.Default.Compare(visyn.ToDouble(b), visyn.ToDouble(a)), defaultOpposite);
+
+            Assert.Zero(defaultResult + defaultOpposite);
+			// Verify CustomComparer results...
+            Assert.AreEqual(defaultResult,   custom.Compare(oA,oB));
+            Assert.AreEqual(defaultOpposite, custom.Compare(oB,oA));
+        }
+
+		// <#= type.Name #> - Default Comparer (inverted)
+		public static void MatchesInvertedDefaultComparer(CustomComparer<<#= type.Name #>> custom, <#= type.Name #> a,<#= type.Name #> b)
+        {
+            var defaultComparer = Comparer<<#= type.Name #>>.Default;
+            var defaultResult = defaultComparer.Compare(a, b);
+			var defaultOpposite = defaultComparer.Compare(b, a);
+<#if(type == typeof(byte) || type == typeof(char) || type == typeof(Int16) || type == typeof(UInt16)) {#>
+			defaultResult = defaultResult == 0 ? 0 : (defaultResult > 0 ? 1 : -1);
+			defaultOpposite = defaultOpposite == 0 ? 0 : (defaultOpposite > 0 ? 1 : -1);
+<#} #>
+            // Verify Comparer.Default results...
+			Assert.AreEqual(Comparer<int>.Default.Compare(Convert.ToInt32(a), Convert.ToInt32(b)), defaultResult);
+            Assert.AreEqual(Comparer<int>.Default.Compare(Convert.ToInt32(b), Convert.ToInt32(a)), defaultOpposite);
+<#if(type != typeof(char)) {#>
+            Assert.AreEqual(Comparer<double>.Default.Compare(Convert.ToDouble(a), Convert.ToDouble(b)), defaultResult);
+            Assert.AreEqual(Comparer<double>.Default.Compare(Convert.ToDouble(b), Convert.ToDouble(a)), defaultOpposite);
+<#} #>
+			// Verify Visyn.NumberConverter .Default results... (note this works with char<->double)
+			Assert.AreEqual(Comparer<int>.Default.Compare(visyn.ToInt32(a), visyn.ToInt32(b)), defaultResult);
+            Assert.AreEqual(Comparer<int>.Default.Compare(visyn.ToInt32(b), visyn.ToInt32(a)), defaultOpposite);
+			Assert.AreEqual(Comparer<double>.Default.Compare(visyn.ToDouble(a), visyn.ToDouble(b)), defaultResult);
+            Assert.AreEqual(Comparer<double>.Default.Compare(visyn.ToDouble(b), visyn.ToDouble(a)), defaultOpposite);
+
+            Assert.Zero(defaultResult + defaultOpposite);
+			// Verify CustomComparer results...
+            Assert.Zero(defaultResult + defaultOpposite);
+			Assert.AreEqual(-1*defaultOpposite, custom.Compare(b,a));
+            Assert.AreEqual(-1*defaultResult, custom.Compare(a,b));
+        }
+
+		public static void MatchesInvertedDefaultComparer_TypeT<T>(CustomComparer<T> custom, object oA, object oB, <#= type.Name #> a,<#= type.Name #> b)
+        {
+			Assert.AreEqual(Convert.ToInt32(oA),Convert.ToInt32(a),"Unit test parameter mis-match oA does not equal a");
+			Assert.AreEqual(Convert.ToInt32(oB),Convert.ToInt32(b),"Unit test parameter mis-match oB does not equal b");
+            var defaultComparer = Comparer<<#= type.Name #>>.Default;
+            var defaultResult = defaultComparer.Compare(a, b);
+			var defaultOpposite = defaultComparer.Compare(b, a);
+<#if(type == typeof(byte) || type == typeof(char) || type == typeof(Int16) || type == typeof(UInt16)) {#>
+			defaultResult = defaultResult == 0 ? 0 : (defaultResult > 0 ? 1 : -1);
+			defaultOpposite = defaultOpposite == 0 ? 0 : (defaultOpposite > 0 ? 1 : -1);
+<#} #>
+            // Verify Comparer.Default results...
+			Assert.AreEqual(Comparer<int>.Default.Compare(Convert.ToInt32(a), Convert.ToInt32(b)), defaultResult);
+            Assert.AreEqual(Comparer<int>.Default.Compare(Convert.ToInt32(b), Convert.ToInt32(a)), defaultOpposite);
+<#if(type != typeof(char)) {#>
+            Assert.AreEqual(Comparer<double>.Default.Compare(Convert.ToDouble(a), Convert.ToDouble(b)), defaultResult);
+            Assert.AreEqual(Comparer<double>.Default.Compare(Convert.ToDouble(b), Convert.ToDouble(a)), defaultOpposite);
+<#} #>
+			// Verify Visyn.NumberConverter .Default results... (note this works with char<->double)
+			Assert.AreEqual(Comparer<int>.Default.Compare(visyn.ToInt32(a), visyn.ToInt32(b)), defaultResult);
+            Assert.AreEqual(Comparer<int>.Default.Compare(visyn.ToInt32(b), visyn.ToInt32(a)), defaultOpposite);
+			Assert.AreEqual(Comparer<double>.Default.Compare(visyn.ToDouble(a), visyn.ToDouble(b)), defaultResult);
+            Assert.AreEqual(Comparer<double>.Default.Compare(visyn.ToDouble(b), visyn.ToDouble(a)), defaultOpposite);
+
+            Assert.Zero(defaultResult + defaultOpposite);
+			// Verify CustomComparer results...
+            Assert.AreEqual(-1*defaultResult,   custom.Compare(oA,oB));
+            Assert.AreEqual(-1*defaultOpposite, custom.Compare(oB,oA));
+        }
+#endregion
+<#} #>
+	}
+}

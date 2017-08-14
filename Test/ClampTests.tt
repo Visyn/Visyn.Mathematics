@@ -1,0 +1,47 @@
+﻿<#@ include file="../Lib/T4/NumericTypes.ttinclude" #>
+using NUnit.Framework;
+using System.Threading;
+using Visyn.Mathematics;
+using Visyn.Mathematics.Rand;
+
+namespace Visyn.Mathmatics.Test
+{
+	public class ClampTests
+	{
+<# foreach (var type in numbericTypes) { #>
+        [Test()]
+        public void ClampTest_<#= type.Name #>()
+        {
+			IRandom random = Rng<FastRng>.Unique(null);
+		    var values1 = random.ExclusiveList(-1000000, 1000000,100);
+            var mins = random.ExclusiveList(-1000000, 1000000,100);
+            var maxs = random.ExclusiveList(-1000000, 1000000, 100);
+
+            for (int i=0;i<100;i++)
+            {
+                var value1 = (<#= type.Name #>)values1[i];
+                var min = (<#= type.Name #>)mins[i];
+                var max = (<#= type.Name #>)maxs[i];
+
+                var result1 = value1.Clamp(min,max);
+				Assert.AreEqual(min,(<#= type.Name #>)mins[i],$"Min changed: was {mins[i]} now {min}");
+                Assert.AreEqual(max,(<#= type.Name #>)maxs[i],$"Max changed: was {maxs[i]} now {max}");
+                Assert.AreEqual(value1,(<#= type.Name #>)values1[i],$"Value changed: was {values1[i]} now {value1}");
+
+                Assert.GreaterOrEqual(result1,Math.Min(min,max),$"GreaterThan extension failed: {result1} < Math.Min({min},{max})");
+                Assert.LessOrEqual(result1,Math.Max(min,max),$"LessThan extension failed: {result1} > Math.Max({min},{max})");
+
+                var result2 = Numbers.Clamp(value1,min, max);
+                Assert.GreaterOrEqual(result2,Math.Min(min,max),$"GreaterThan failed: {result2} < Math.Min({min},{max})");
+                Assert.LessOrEqual(result2,Math.Max(min,max),$"LessThan failed: {result2} > Math.Max({min},{max})");
+                Assert.AreEqual(result1,result2);
+
+			}
+		}
+<#	} #>
+	}
+}
+
+
+
+

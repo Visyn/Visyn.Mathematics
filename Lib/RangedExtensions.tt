@@ -1,0 +1,50 @@
+﻿<#@ include file="./T4/NumericTypes.ttinclude" #>
+using Visyn.Public.Types;
+
+namespace Visyn.Mathematics
+{
+	public static partial class RangedExtensions
+	{
+<# foreach (var type in numericTypesLongerThan1) { #>
+		public static <#= type.Name #> ModuloAddWithCarry(this Ranged<<#= type.Name #>> ranged, <#= type.Name #> value)
+        {
+            var sum = ranged.Value + value;
+			<#= type.Name #> carry=(<#= type.Name #>)0;
+            if (sum <= ranged.Max && sum >= ranged.Min)
+            {
+                ranged.Value = (<#= type.Name #>)sum;
+                return carry;
+            }
+
+            <#= type.Name #> positions = (<#= type.Name #>)(ranged.Max - ranged.Min + 1);
+			<#= type.Name #> remainder = (<#= type.Name #>)0;
+			carry = Numbers.Divide((<#= type.Name #>)(sum-ranged.Min), positions, out remainder);
+			
+<# if(unsignedTypes.Contains(type))  { #>
+			<#= type.Name #> result = (<#= type.Name #>)(ranged.Min + remainder);
+<#} else { #>
+			<#= type.Name #> result;
+            if (remainder >= 0)
+            {
+				result = (<#= type.Name #>)(ranged.Min + remainder);
+            }
+			else
+            {	// remainder is negative, back off from max & decrement carry
+				result = (<#= type.Name #>)(ranged.Max + 1 + remainder);
+				carry--;
+            }
+<# }#>
+			ranged.Value = result;
+#if DEBUG
+<# if(floatingPointTypes.Contains(type))  { #>
+			if(Math.Abs(ranged.Value - result) > 1e-12) throw new Exception($"Value={result} failed range [{ranged.Min},{ranged.Max}], {ranged.Value}+{value}, {carry}R{remainder}");
+<# } else { #>
+			if(ranged.Value != result) throw new Exception($"Value={result} failed range [{ranged.Min},{ranged.Max}], {ranged.Value}+{value}, {carry}R{remainder}");
+<# } #>
+#endif
+			return carry;
+		}
+<#		} #>
+
+	}
+}

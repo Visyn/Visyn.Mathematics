@@ -1,0 +1,104 @@
+﻿using System;
+using System.Collections.Concurrent;
+using System.Diagnostics;
+using System.Threading.Tasks;
+using System.Windows.Threading;
+using Visyn.Public.Exceptions;
+
+namespace Visyn.Mathematics.Rand
+{
+    //   using Visyn.Util.Events;
+
+    /// <summary>
+    /// Generic random number generator factory.
+    /// Creates and stores instance of the specified type random number generator
+    /// </summary>
+    /// <typeparam name="TRandom">The type of the random number generator.</typeparam>
+    public class Rng<TRandom> where TRandom : IRandom
+    {
+        /// <summary>
+        /// The thread safe random number generators static storage
+        /// </summary>
+        private static readonly Lazy<ConcurrentDictionary<int, TRandom>> _generators = new Lazy<ConcurrentDictionary<int, TRandom>>();
+
+        /// <summary>
+        /// Creates or returns shared thread safe random number generator
+        /// </summary>
+        /// <returns>Random number generator implementing IRandom</returns>
+        /// <exception cref="Exception">May throw exception if exception handler not assigned.</exception>
+        public static IRandom ThreadSafeRandom(IExceptionHandler handler, int threadID)
+        {
+            try
+            {
+                if (threadID == 0)
+                {
+                    var dispatcher = Dispatcher.CurrentDispatcher;
+                    
+                    var id = Task.CurrentId;
+                    if (id != null) threadID = id.Value;
+                }
+                //var dispatcher2 = Dispatcher.CurrentDispatcher;
+                //var iddd2 = dispatcher2.ThreadIddd();
+
+                Debug.Assert(threadID > 0);
+                var context = threadID;
+                if (_generators.IsValueCreated && _generators.Value.ContainsKey(context))
+                {
+                    return _generators.Value[context];
+                }
+                var rng = (TRandom)Activator.CreateInstance(typeof(TRandom));
+
+                _generators.Value.GetOrAdd(context, rng);
+
+                return rng;
+            }
+            catch (Exception exc)
+            {
+                var exception = new Exception( $"{nameof(Rng<TRandom>)}.{nameof(ThreadSafeRandom)} could not create random number generator!", exc);
+                if (handler == null || !handler.HandleException( $"{nameof(Rng<TRandom>)}.{nameof(ThreadSafeRandom)} ",exception))
+                    throw exception;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Returns thread safe typed random number generator instance
+        /// </summary>
+        /// <typeparam name="T">Random number generator data type</typeparam>
+        /// <returns>Thread safe random number generator implementing IRandom&lt;T&gt;.</returns>
+        /// <exception cref="Exception">May throw exception if exception handler not assigned.</exception>
+        public static IRandom<T> ThreadSafeRandom<T>(IExceptionHandler handler, int threadID) where T : IComparable => (IRandom<T>)ThreadSafeRandom(handler, threadID);
+
+        /// <summary>
+        /// Returns a unique typed random number generator instance.
+        /// </summary>
+        /// <typeparam name="T">Random number generator data type</typeparam>
+        /// <returns>Unique random number generator implementing IRandom&lt;T&gt;.</returns>
+        /// <exception cref="Exception">May throw exception if exception handler not assigned.</exception>
+        public static IRandom<T> Unique<T>(IExceptionHandler handler, int threadID) where T : IComparable => (IRandom<T>)Unique(handler);
+
+        /// <summary>
+        /// Returns a unique typed random number generator instance.
+        /// </summary>
+        /// <typeparam name="T">Random number generator data type</typeparam>
+        /// <returns>Unique random number generator implementing IRandom&lt;T&gt;.</returns>
+        /// <exception cref="Exception">May throw exception if exception handler not assigned.</exception>
+        public static IRandom Unique(IExceptionHandler handler)
+        {
+            try
+            {
+                var rng = (TRandom)Activator.CreateInstance(typeof(TRandom));
+
+                ((TRandom) rng).ReSeed(new[] { (ulong)(new SystemRandom().Exclusive((double) ulong.MinValue, (double) ulong.MaxValue)) });
+                return rng;
+            }
+            catch (Exception exc)
+            {
+                var exception = new Exception($"{nameof(Rng<TRandom>)}.{nameof(ThreadSafeRandom)} could not create random number generator!", exc);
+                if (handler == null || !handler.HandleException($"{nameof(Rng<TRandom>)}.{nameof(ThreadSafeRandom)} ", exception))
+                    throw exception;
+            }
+            return null;
+        }
+    }
+}

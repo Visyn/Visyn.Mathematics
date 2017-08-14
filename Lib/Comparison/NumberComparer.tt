@@ -1,0 +1,71 @@
+﻿<#@ include file="../T4/NumericTypes.ttinclude" #>
+using System.Diagnostics;
+using Visyn.Public.Comparison;
+using Visyn.Public.Exceptions;
+
+namespace Visyn.Mathematics.Comparison 
+{ 
+	public static class CompareNumbers
+	{
+	    public static CustomComparer<T> Toleranced<T>(T tolerance) where T : IComparable, IComparable<T>, IEquatable<T>
+        { 
+			if (tolerance.IsNumeric())
+            {
+<# foreach (var type in numbericTypes) { #>
+				// <#= type.Name #> 
+				if (typeof(T) == typeof(<#= type.Name #> ))  return (new CustomComparer<<#= type.Name #>>((a, b) => 
+                                (a > b) ? (((a - b) <= Convert.To<#= type.Name #>(tolerance) ? 0 : 1)) : ((b - a) <= Convert.To<#= type.Name #>(tolerance) ? 0 : -1)
+                            )) as CustomComparer<T>;
+<# }#>
+            }
+            throw new NotImplementedException($"CustomComparer<T>.{nameof(Toleranced)} not implemented for Type={typeof(T)}");
+        }
+
+		#region numbericTypes
+
+		// Note The following type conversions do not work [using Convert.ToXxx(...)]
+		// char-> double, single,>decimal
+		// double->char
+<# foreach (var type in numbericTypes) { #>
+
+		// <#= type.Name #>
+		public static CustomComparer<T> Toleranced<T>(<#= type.Name #> tolerance) 
+		{
+			// If tolerance type matches parameter type, use function without call to Convert.To<#= type.Name #>() for every comparison
+			if(typeof(T) == typeof(<#= type.Name #>))  return Toleranced(tolerance) as CustomComparer<T>;
+
+		    return  new CustomComparer<T>(new Func<T, T, int>((a, b) =>
+		    {
+<# if(type == typeof(char)) { #>
+				var x = Convert.ToInt32(a);
+				var y = Convert.ToInt32(b);
+<#} else if(type == typeof(Single) || type == typeof(double) || type==typeof(decimal)) {#>
+		        <#= type.Name #> x = a is char ? Convert.ToInt32(a) : Convert.To<#= type.Name #>(a);
+                <#= type.Name #> y = b is char ? Convert.ToInt32(b) : Convert.To<#= type.Name #>(b);
+<#} else {#>
+		        <#= type.Name #> x = Convert.To<#= type.Name #>(a);
+		        <#= type.Name #> y = Convert.To<#= type.Name #>(b);
+<#} #>
+				// Calculate difference so that the result is positive (works for both unsigned and signed types)
+		        if (x > y) return (x - y) <= tolerance ? 0 : 1;
+		        return (y - x) <= tolerance ? 0 : -1;
+		    }));
+        }
+
+		public static CustomComparer<T> Toleranced<T>(<#= type.Name #> tolerance, Func<T,<#= type.Name #>> converter)
+		{
+		    if (converter == null) throw new ArgumentNullException($"{nameof(converter)} can not be null!");
+
+		    return  new CustomComparer<T>(new Func<T, T, int>((a, b) =>
+		    {
+		        var x = converter(a);
+		        var y = converter(b);
+				// Calculate difference so that the result is positive (works for both unsigned and signed types)
+		        if (x > y) return (x - y) <= tolerance ? 0 : 1;
+		        return (y - x) <= tolerance ? 0 : -1;
+		    }));
+        }
+<#} #>
+		#endregion
+	}
+}

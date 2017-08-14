@@ -1,0 +1,120 @@
+﻿<#@ include file="../T4/NumericTypes.ttinclude" #>
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using Visyn.Core.Comparison;
+
+namespace Visyn.Mathematics
+{
+	public static partial class MathExtensions
+	{
+		public static double Variance<T>(this IEnumerable<T> collection, out double ave, out int count, Func<T,double> convert)
+        {
+			return Variance(collection.Select(convert), out ave, out count);
+        }
+
+		public static double Variance<T>(this IEnumerable<T> collection) where T : IComparable, IComparable<T>, IEquatable<T>
+        {
+			double ave;
+			int count;
+<# foreach (var type in numbericTypes) { #>
+			// <#= type.Name #> 
+			if (typeof(T) == typeof(<#= type.Name #>)) return ((IEnumerable<<#= type.Name #>>)collection).Variance(out ave, out count);
+<# }#>
+            if (typeof(T).IsNumeric() || typeof(T) == typeof(string)) return Variance(collection.Select(i => NumberConverter.Instance.ToDouble(i)),out ave,out count);
+//			if (typeof(T) == typeof(string)) return Variance(collection.Select(s => Convert.ToDouble(s)), out ave, out count);
+            throw new NotImplementedException($"Average not implemented for Type={typeof(T)}");
+        }
+
+        public static double Variance<T>(this IEnumerable<T> collection, out double ave) where T : IComparable, IComparable<T>, IEquatable<T>
+        {
+			int count;
+<# foreach (var type in numbericTypes) { #>
+			// <#= type.Name #> 
+			if (typeof(T) == typeof(<#= type.Name #>)) return ((IEnumerable<<#= type.Name #>>)collection).Variance(out ave, out count);
+<# }#>
+            if (typeof(T).IsNumeric()|| typeof(T) == typeof(string)) return Variance(collection.Select(i => NumberConverter.Instance.ToDouble(i)),out ave,out count);
+
+            throw new NotImplementedException($"Average not implemented for Type={typeof(T)}");
+        }
+
+        public static double Variance<T>(this IEnumerable<T> collection, out double ave, out int count) where T : IComparable, IComparable<T>, IEquatable<T>
+        {
+<# foreach (var type in numbericTypes) { #>
+			// <#= type.Name #> 
+			if (typeof(T) == typeof(<#= type.Name #>)) return ((IEnumerable<<#= type.Name #>>)collection).Variance(out ave, out count);
+<# }#>
+            if (typeof(T).IsNumeric()|| typeof(T) == typeof(string)) return Variance(collection.Select(i => NumberConverter.Instance.ToDouble(i)),out ave, out count);
+
+            throw new NotImplementedException($"Average not implemented for Type={typeof(T)}");
+        }
+		        
+		public static Statistics Statistics<T>(this IEnumerable<T> collection, string name=null) where T : IComparable, IComparable<T>, IEquatable<T>
+        {
+<# foreach (var type in numbericTypes) { #>
+			// <#= type.Name #> 
+			if (typeof(T) == typeof(<#= type.Name #>)) return ((IEnumerable<<#= type.Name #>>)collection).Statistics(name);
+<# }#>
+            if (typeof(T).IsNumeric()|| typeof(T) == typeof(string)) return Statistics(collection.Select(i => NumberConverter.Instance.ToDouble(i)),name);
+
+            throw new NotImplementedException($"Average not implemented for Type={typeof(T)}");
+        }
+
+<# foreach (var type in numbericTypes) { #>
+
+		/// <summary>
+        /// Calculates the variance of the specified collection
+        /// </summary>
+        /// <param name="numbers">The numbers to calculate variance of.</param>
+		/// <param name="average">Average of the collection</param>
+        /// <returns>Mean value System.Double.</returns>
+		public static double Variance (this IEnumerable<<#= type.Name #>> numbers, out double average, out int count)  
+		{
+            average = 0.0;
+			count = 0;
+            double M2 = 0.0;
+
+            foreach (var x in numbers)
+            {
+                count += 1;
+                var delta = (double)x - average;
+                average += delta / count;
+                var delta2 = (double)x - average;
+                M2 += delta * delta2;
+            }
+            return count < 2 ? double.NaN : M2 / (count - 1);
+		}
+
+		/// <summary>
+        /// Calculates the variance of the specified collection
+        /// </summary>
+        /// <param name="numbers">The numbers to calculate variance of.</param>
+		/// <param name="name">Name of the statistics</param>
+        /// <returns>Mean value System.Double.</returns>
+		public static Statistics Statistics (this IEnumerable<<#= type.Name #>> numbers, string name=null)  
+		{
+            double average = 0.0;
+			int count = 0;
+            double M2 = 0.0;
+			double min = double.MaxValue;
+			double max = double.MinValue;
+
+            foreach (var x in numbers)
+            {
+				var d = (double)x;
+                count += 1;
+                var delta = d - average;
+                average += delta / count;
+                var delta2 = d - average;
+                M2 += delta * delta2;
+				max=(d>max) ? d : max;
+				min=(d<min) ? d : min;
+            }
+			 var variance= count < 2 ? double.NaN : M2 / (count - 1);
+			return new Statistics(name, average,variance,Math.Sqrt(variance),min,max,count);
+		}
+
+<#
+		} #>
+	}
+}

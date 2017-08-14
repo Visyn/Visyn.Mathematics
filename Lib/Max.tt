@@ -1,0 +1,48 @@
+﻿<#@ include file="./T4/NumericTypes.ttinclude" #>
+using System.Runtime.CompilerServices;
+
+namespace Visyn.Mathematics 
+{ 
+	public static partial class Numbers
+	{
+<# foreach (var type in numbericTypes) { #>
+        /// <summary>
+        /// Return the maximum of two values
+        /// </summary>
+        /// <param name="a">First value</param>
+        /// <param name="b">Second value</param>
+        /// <returns>Maxmum value</returns>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static <#= type.Name #> Max(<#= type.Name #> a, <#= type.Name #> b) => a>b ? a : b;
+		
+	    /// <summary>
+	    /// Return the maximum of two nullable values
+	    /// </summary>
+	    /// <param name="a">First value</param>
+	    /// <param name="b">Second value</param>
+	    /// <param name="defaultValue">Value to use for comparison if either of the parameters are null</param>
+	    /// <returns>Maxmum value</returns>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+<#if(type!=typeof(decimal)) {#>
+		public static <#= type.Name #> Max(<#= type.Name #>? a, <#= type.Name #>? b, <#= type.Name #> defaultValue=<#= type.Name #>.MinValue)
+		{
+<#} else {#>
+		public static <#= type.Name #> Max(<#= type.Name #>? a, <#= type.Name #>? b, <#= type.Name #> defaultValue)
+		{
+<#}#>
+		    var aValue = a.GetValueOrDefault(defaultValue);
+		    var bValue = b.GetValueOrDefault(defaultValue);
+            return aValue > bValue ? aValue : bValue;
+	    }
+<#if(type==typeof(decimal)) {#>
+ 	    /// <summary>
+	    /// Return the maximum of two nullable values
+	    /// </summary>
+	    /// <param name="a">First value</param>
+	    /// <param name="b">Second value</param>
+	    /// <returns>Maxmum value</returns>
+		public static <#= type.Name #> Max(<#= type.Name #>? a, <#= type.Name #>? b) => Max(a, b,Decimal.MinValue);
+<#}#>
+<#} #>
+	}
+}

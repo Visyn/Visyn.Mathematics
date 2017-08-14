@@ -1,0 +1,57 @@
+﻿<#@ include file="./T4/NumericTypes.ttinclude" #>
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace Visyn.Mathematics
+{
+	public static partial class MathExtensions
+	{
+        public static double Mean<T>(this ICollection<T> collection) where T : IComparable, IComparable<T>, IEquatable<T>
+        {
+		<# foreach (var type in numbericTypes) { #>
+			// <#= type.Name #> 
+			if (typeof(T) == typeof(<#= type.Name #>)) return ((IEnumerable<<#= type.Name #>>)collection).Mean();
+<# }#>
+            if (typeof(T).IsNumeric()) return Mean(collection.Select(i => i.ToDouble(null)));
+
+            throw new NotImplementedException($"Average not implemented for Type={typeof(T)}");
+        }
+
+<# foreach (var type in numbericTypes) { #>
+        /// <summary>
+        /// Calculated the mean of the specified collection of numbers.
+        /// </summary>
+        /// <param name="numbers">The numbers to calculate mean of.</param>
+        /// <returns>Mean value System.Double.</returns>
+		public static double Mean (this ICollection<<#= type.Name #>> numbers) 
+		{
+			double sum = 0;
+			int count = numbers.Count;
+			foreach (var item in numbers)
+			{
+				sum += (double)item/count;
+			}
+			return sum;
+		}
+	    /// <summary>
+        /// Calculated the mean of the specified collection of numbers.
+        /// </summary>
+        /// <param name="numbers">The numbers to calculate mean of.</param>
+        /// <returns>Mean value System.Double.</returns>
+		public static double Mean (this IEnumerable<<#= type.Name #>> numbers) 
+		{
+			double sum = 0;
+			int count = 0;
+			foreach (var item in numbers)
+			{
+				count++;
+				sum += (double)item;
+			}
+			return sum/count;
+		}
+
+<#
+		} #>
+	}
+}

@@ -1,0 +1,84 @@
+﻿<#@ include file="../Lib/T4/NumericTypes.ttinclude" #>
+using NUnit.Framework;
+using System.Runtime.InteropServices;
+using System.Threading;
+using Visyn.Mathematics;
+using Visyn.Mathematics.Rand;
+ 
+namespace Visyn.Mathmatics.Test
+{
+	public class DivTests
+	{
+<# foreach (var type in numbericTypes) { #>
+
+	    /// <exception cref="Exception">May throw exception if exception handler not assigned.</exception>
+        [Test()]
+        public void DivTest_<#= type.Name #>()
+        {
+			var rangeMax =  Math.Min(1000000,<#= type.Name #>.MaxValue);
+			IRandom random = Rng<FastRng>.Unique(null);
+            var dividends = random.ExclusiveList(1, 100000,100);
+            var divisors = random.ExclusiveList(1, 100000,100);
+
+            for(int i=0;i<100;i++)
+            {
+                var remainder = (<#= type.Name #>)0;
+                var dividend = (<#= type.Name #>)dividends[i];
+                var divisor = (<#= type.Name #>)divisors[i];
+				if(divisor == 0) divisor++;
+                var ndividend = Negative<<#= type.Name #>>(dividend);
+                var ndivisor = Negative<<#= type.Name #>>(divisor);
+
+                var quotient = Numbers.Divide(dividend, divisor, out remainder);
+                DivCheck(typeof(<#= type.Name #>),dividend, divisor, quotient, remainder, $"DivTest_<#= type.Name #> (+/+) {dividend}/{divisor}={quotient} R {remainder}");
+
+                quotient = Numbers.Divide(ndividend, divisor, out remainder);
+                DivCheck(typeof(<#= type.Name #>),ndividend, divisor, quotient, remainder, $"DivTest_<#= type.Name #> (-/+) {ndividend}/{divisor}={quotient} R {remainder}");
+
+                quotient = Numbers.Divide(dividend, ndivisor, out remainder);
+                DivCheck(typeof(<#= type.Name #>),dividend, ndivisor, quotient, remainder, $"DivTest_<#= type.Name #> (+/-) {dividend}/{ndivisor}={quotient} R {remainder}");
+
+                quotient = Numbers.Divide(ndividend, ndivisor, out remainder);
+                DivCheck(typeof(<#= type.Name #>),ndividend, ndivisor, quotient, remainder, $"DivTest_<#= type.Name #> (-/-) {ndividend}/{ndivisor}={quotient} R {remainder}");
+                
+				Assert.Throws<DivideByZeroException>( delegate { Numbers.Divide(dividend, (<#= type.Name #>)0, out remainder); });
+			}
+        }
+
+<#		} #>
+	    private static Int64 Cast64<T>(T value) where T : IConvertible
+        {
+            var quotientDouble = Convert.ToDouble(value);
+            Int64 quotient64 = Convert.ToInt64(quotientDouble > 0 ? Math.Floor(quotientDouble) : Math.Ceiling(quotientDouble));
+            return quotient64;
+        }
+
+		private static void DivCheck<T>(Type type, T dividend, T divisor, T quotientT, T remainder, string message) where T : IConvertible
+		{
+		    //Int64 quotient64 = quotient > 0 ? Math.Floor(quotient) : Math.Ceiling(quotient);
+		    var quotientDouble = Convert.ToDouble(quotientT);
+		    Int64 quotient64 = Cast64<T>(quotientT);
+            double calculated = Convert.ToDouble(dividend) / Convert.ToDouble(divisor);
+			double tolerance = Math.Abs(calculated*Math.Pow(2, Marshal.SizeOf(type) * -2)*10);
+			Assert.AreEqual(quotient64, Cast64<double>(calculated), tolerance, message);
+            Assert.AreEqual(quotient64 + (Convert.ToDouble(remainder) / Convert.ToDouble(divisor)), calculated, tolerance,message);
+        }
+
+
+		private static void DivCheck(Type type, char dividend, char divisor, char quotient, char remainder, string message) //where T : IConvertible
+        {
+            double calculated = (double)dividend / (double)divisor;
+            double tolerance = Math.Abs(calculated * Math.Pow(2, Marshal.SizeOf(type) * -2) * 10);
+            Assert.AreEqual(Convert.ToInt64(quotient), (Int64)calculated, tolerance, message);
+            Assert.AreEqual((double)quotient + (double)remainder / (double)divisor, calculated, tolerance, message);
+        }
+
+<# foreach (var type in numbericTypes) { #>
+		private <#= type.Name #> Negative<T>(<#= type.Name #> value) { return (<#= type.Name #>)(value<# if(!unsignedTypes.Contains(type)) { #>*-1<# } #>); }
+<# } #>
+	}
+}
+
+
+
+

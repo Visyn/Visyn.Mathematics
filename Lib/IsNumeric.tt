@@ -1,0 +1,217 @@
+﻿<#@ include file="./T4/NumericTypes.ttinclude" #>
+using System.Reflection;
+using Visyn.Public.Types;
+
+namespace Visyn.Mathematics
+{
+
+	public static class IsNumericType
+	{
+	
+	    /// <summary>
+        /// Determines whether the specified item is a numeric data type.
+        /// </summary>
+        /// <param name="type">The item</param>
+        /// <returns><c>true</c> if the specified item is numeric; otherwise, <c>false</c>.</returns>
+		public static bool IsNumeric(this object item) 
+		{
+	        if (item == null) return false;
+	        var type = item.GetType();
+	        if (type.GetTypeInfo().IsValueType) return type.IsNumeric();
+
+	        var genericType = Nullable.GetUnderlyingType(type);
+	        if (genericType != null)
+	        {
+#if DEBUG
+                throw new Exception("Look into this case more....");
+#else
+                return genericType.IsNumeric();
+#endif
+	        }
+	        var itype = item as Visyn.Public.Types.IType;
+	        if (itype != null) return itype.Type.IsNumeric();
+
+	        return false;
+		}
+
+		/// <summary>
+        /// Determines whether the specified item is a numeric data type.
+        /// </summary>
+        /// <param name="type">The item</param>
+        /// <returns><c>true</c> if the specified item is numeric; otherwise, <c>false</c>.</returns>
+		public static bool IsNumericExtended(this object item) 
+		{
+	        if (item == null) return false;
+	        var type = item.GetType();
+	        if (type.GetTypeInfo().IsValueType) return type.IsNumericExtended();
+
+	        var genericType = Nullable.GetUnderlyingType(type);
+	        if (genericType != null)
+	        {
+#if DEBUG
+                throw new Exception("Look into this case more....");
+#else
+                return genericType.IsNumericExtended();
+#endif
+	        }
+	        var itype = item as Visyn.Public.Types.IType;
+	        if (itype != null) return itype.Type.IsNumericExtended();
+
+	        return false;
+		}
+
+		/// <summary>
+        /// Gets the type of item if the item is numeric.
+        /// </summary>
+        /// <param name="item">The item.</param>
+        /// <returns>A valid numeric type, or null if non-numeric</returns>
+		public static Type GetNumericType(this object item)
+		{
+			if (item == null) return null;
+		    var type = item.GetType();
+<# foreach (var type in numbericTypes) { #>
+			// <#= type.Name #> 
+			if (type == typeof(<#= type.Name #>)) return typeof(<#= type.Name #>);
+<# }#>
+		    var value = item as IValue;
+		    if(value != null && value.Type.IsNumeric()) return value.Type;
+			return null;
+		}
+
+				/// <summary>
+        /// Gets the type of item if the item is numeric.
+        /// </summary>
+        /// <param name="item">The item.</param>
+        /// <returns>A valid numeric type, or null if non-numeric</returns>
+		public static Type GetExtendedNumericType(this object item)
+		{
+			if (item == null) return null;
+		    var type = item.GetType();
+<# foreach (var type in numbericTypesExtended) { #>
+			// <#= type.Name #> 
+			if (type == typeof(<#= type.Name #>)) return typeof(<#= type.Name #>);
+<# }#>
+		    var value = item as IValue;
+		    if(value != null && value.Type.IsNumeric()) return value.Type;
+			return null;
+		}
+
+		[Obsolete("Do not use.  Reference only", true)]
+		public static Type GetGenericType2(this Type type) { return Nullable.GetUnderlyingType(type); }
+
+		[Obsolete("Do not use.  Reference only", true)]
+        public static bool IsGenericType2(this Type type) { return type.GetTypeInfo().IsGenericType; }
+
+
+		/// <summary>
+        /// Determines whether the specified type is a numeric data type.
+        /// </summary>
+        /// <param name="type">The type</param>
+        /// <returns><c>true</c> if the specified type is numeric; otherwise, <c>false</c>.</returns>
+		public static bool IsNumeric(this Type type)
+        {
+
+<# foreach (var type in numbericTypes) { #>
+			// <#= type.Name #> 
+			if (type == typeof(<#= type.Name #>)) return true;
+<# }#>
+            // If type is generic type
+		    var genericType = Nullable.GetUnderlyingType(type);
+            return genericType != null && genericType.IsNumeric();
+		}
+
+		/// <summary>
+        /// Determines whether the specified type is a numeric data type.
+        /// </summary>
+        /// <param name="type">The type</param>
+        /// <returns><c>true</c> if the specified type is numeric; otherwise, <c>false</c>.</returns>
+		public static bool IsNumericExtended(this Type type)
+        {
+
+<# foreach (var type in numbericTypesExtended) { #>
+			// <#= type.Name #> 
+			if (type == typeof(<#= type.Name #>)) return true;
+<# }#>
+            // If type is generic type
+		    var genericType = Nullable.GetUnderlyingType(type);
+            return genericType != null && genericType.IsNumericExtended();
+		}
+
+		/// <summary>
+        /// Determines whether the specified type is a signed numeric data type.
+        /// </summary>
+        /// <param name="type">The type</param>
+        /// <returns><c>true</c> if the specified type is a signed numeric type; otherwise, <c>false</c>.</returns>
+		public static bool IsSignedNumeric(this Type type)
+        {
+<# foreach (var type in signedTypes) { #>
+			// <#= type.Name #> 
+			if (type == typeof(<#= type.Name #>)) return true;
+<# }#>
+            // If type is generic type
+		    var genericType = Nullable.GetUnderlyingType(type);
+            return genericType != null && genericType.IsSignedNumeric();
+		}
+
+		/// <summary>
+        /// Determines whether the specified type is an unsigned numeric data type.
+        /// </summary>
+        /// <param name="type">The type</param>
+        /// <returns><c>true</c> if the specified type is unsigned numeric; otherwise, <c>false</c>.</returns>
+		public static bool IsUnsignedNumeric(this Type type)
+        {
+<# foreach (var type in unsignedTypes) { #>
+			// <#= type.Name #> 
+			if (type == typeof(<#= type.Name #>)) return true;
+<# }#>
+		    var genericType = Nullable.GetUnderlyingType(type);
+            return genericType != null && genericType.IsUnsignedNumeric();
+		}
+
+		public static bool IsZero(this object item)
+        {
+		    var type = item?.GetType();
+	        if (type == null) return false;
+<# foreach (var type in integerTypes) { #>
+			// <#= type.Name #> 
+			if (type == typeof(<#= type.Name #>)) return  ((<#= type.Name #>)item) == 0;
+<# }#>
+			<# foreach (var type in floatingPointTypes) { #>
+			// <#= type.Name #> 
+			if (type == typeof(<#= type.Name #>)) return  ((<#= type.Name #>)item) == ((<#= type.Name #>)0);
+<# }#>
+			if (type == typeof(DateTime)) return ((DateTime)item) == DateTime.MinValue;
+			if (type == typeof(TimeSpan)) return ((TimeSpan)item) == TimeSpan.Zero;
+			if (type == typeof(bool)) return ((bool)item) == false;
+
+			var itype = item as Visyn.Public.Types.IType;
+			if(itype != null)
+			{
+			    if (itype.IsNumeric())
+			    {
+			        var value = item as Visyn.Public.Types.IValue;
+                    if(value != null)
+                    { 
+                        return value.ValueAsObject().IsZero();
+                    }
+
+                    throw new Exception("Not sure how to handle this case");
+			    }
+			}
+			if(type.GetTypeInfo().IsGenericType)
+			{
+			    var nullableType = Nullable.GetUnderlyingType(type);
+                if(nullableType != null)
+                {
+                    if(!nullableType.IsNumeric())
+                    {
+                        return false;
+                    }
+
+                    throw new Exception("Not sure how to handle this case");
+                }
+			}
+			return false;
+		}
+	}
+}

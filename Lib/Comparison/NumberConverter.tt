@@ -1,0 +1,63 @@
+﻿<#@ include file="../T4/NumericTypes.ttinclude" #>
+using System.Diagnostics;
+using Visyn.Public.Types;
+using Visyn.Public.Comparison;
+using Visyn.Public.Exceptions;
+
+namespace Visyn.Mathematics.Comparison 
+{	
+	public partial class NumberConverter : INumberConverter
+			<# foreach (var type in signedTypes) { #>, INumberConverterExtended<<#= type.Name #>><#}#>
+
+			<# foreach (var type in unsignedTypes) { #>, INumberConverterExtended<<#= type.Name #>><#}#>
+
+	{
+	    private static NumberConverter _instance;
+
+	    public static NumberConverter Instance => _instance ?? (_instance = new NumberConverter());
+
+		protected NumberConverter() { }
+<# foreach (var type in numbericTypes) { #>
+
+#region <#= type.Name #> 		// <#= type.Name #> 
+			public <#= type.Name #> To<#= type.Name #>(object a) 
+			{
+			    if (a == null) return (<#= type.Name #>) 0;
+				Type type = a.GetType();
+				if(a is IValue)
+				{
+					type = ((IValue)a).Type;
+					a = ((IValue)a).ValueAsObject();
+				}
+
+<# foreach (var typeT in numbericTypes) { #>
+                if (type == typeof(<#= typeT.Name #>)) return ((INumberConverter<<#= typeT.Name #>>)this).To<#= type.Name #>((<#= typeT.Name #>)a);
+<# }#>
+<# foreach (var typeT in timeTypes) { #>
+				if (type == typeof(<#= typeT.Name #>)) return ((INumberConverter<<#= typeT.Name #>>)this).To<#= type.Name #>((<#= typeT.Name #>)a);	// NumberConverter.<#= typeT.Name #>.cs <#= typeT.Name #> -> <#= type.Name #> 
+<# }#>
+<# foreach (var typeT in otherTypes) { #>
+				if (type == typeof(<#= typeT.Name #>)) return ((INumberConverter<<#= typeT.Name #>>)this).To<#= type.Name #>((<#= typeT.Name #>)a);	// NumberConverter.<#= typeT.Name #>.cs <#= typeT.Name #> -> <#= type.Name #> 
+<# }#>
+<# if( type == typeof(char)) {#>
+				return Convert.To<#= type.Name #>(Convert.ToInt32(a));
+<# } else {#>
+				return Convert.To<#= type.Name #>(a);
+<# }#>
+			}
+
+<# foreach (var typeT in numbericTypes) { #>
+<# if(type == typeof(char) && (typeT == typeof(Double) || typeT == typeof(Single) || typeT == typeof(Decimal))) {#>
+			public <#= type.Name #> To<#= type.Name #>(<#= typeT.Name #> a) => Convert.To<#= type.Name #>(Convert.ToInt32(a));	// char  -> <#= typeT.Name #> throws exception
+<#} else if((type == typeof(Double) || type == typeof(Single) || type == typeof(Decimal)) && typeT == typeof(char)) {#>
+			public <#= type.Name #> To<#= type.Name #>(<#= typeT.Name #> a) => Convert.To<#= type.Name #>(Convert.ToInt32(a));	// double -> <#=typeT.Name#> throws exception
+<# } else {#>
+			public <#= type.Name #> To<#= type.Name #>(<#= typeT.Name #> a)  => Convert.To<#= type.Name #>(a);
+<# }#>
+			public <#= type.Name #> To<#= type.Name #>(<#= typeT.Name #>? a) => a.HasValue ? To<#= type.Name #>(a.Value) : (<#= type.Name #>)0;
+<# }#>
+
+#endregion <#= type.Name #> 		// <#= type.Name #> 
+<# }#>
+	}
+}

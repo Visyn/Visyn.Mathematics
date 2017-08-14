@@ -1,0 +1,24 @@
+﻿<#@ include file="../T4/NumericTypes.ttinclude" #>
+using System.Collections.Generic;
+
+namespace Visyn.Mathematics.Geometry
+{
+	public static class RangeExtensions
+	{
+<# foreach (var type in numericTypesLongerThan1) { #>
+		public static Range<<#= type.Name #>> Limits(this IEnumerable<IRange<<#= type.Name #>>> collection)
+        {
+			var min = <#= type.Name #>.MaxValue;
+			var max = <#= type.Name #>.MinValue;
+
+			foreach(var range in collection)
+			{
+				min = Math.Min(range.Minimum,min);
+				max = Math.Max(range.Maximum,max);
+			}
+			return new Range<<#= type.Name #>>(min,max);
+		}
+<#		} #>
+
+	}
+}

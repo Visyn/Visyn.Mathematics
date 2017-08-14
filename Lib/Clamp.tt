@@ -1,0 +1,59 @@
+﻿<#@ include file="./T4/NumericTypes.ttinclude" #>
+
+namespace Visyn.Mathematics
+{ 
+	public static partial class Numbers
+	{
+<# foreach (var type in numbericTypes) { #>
+        /// <summary>
+        /// Clamp value to range [min,max] (inclusive)
+        /// </summary>
+        /// <param name="value">Value to clamp</param>
+        /// <param name="min">Minimum allowed value</param>
+        /// <param name="max">Maximum allowed value</param>
+        /// <returns>Value in range [min,max]</returns>
+		public static <#= type.Name #> Clamp (this <#= type.Name #> value, <#= type.Name #> min, <#= type.Name #> max) 
+		{
+			if(max < min) 
+			{
+				var temp = min;
+				min = max;
+				max = temp;
+			}
+            return value < min ? min : (value > max) ? max : value;
+		}
+<# }
+   foreach (var type in numbericTypes) { #>
+
+		public static <#= type.Name #> Clamp<#= type.Name #> (decimal value) 
+		{
+<#	if(type!=typeof(decimal) && type!=typeof(Double) && type!=typeof(Single)) 
+	{
+		if(unsignedTypes.Contains(type)) 
+		{#>
+			if(value < 0) return (<#= type.Name #>)0;		// Unsigned implementation
+<#		} else { #>
+			if(value < <#= type.Name #>.MinValue) return <#= type.Name #>.MinValue;		// Signed implementation
+<#		} #>
+			if(value > <#= type.Name #>.MaxValue) return <#= type.Name #>.MaxValue;
+<#	}#>
+			return (<#= type.Name #>) value;
+		}
+
+		public static <#= type.Name #> Clamp<#= type.Name #> (Int64 value) 
+		{
+<#	if(type!=typeof(Int64) && type!=typeof(Single) && type!=typeof(Double))   {
+		if(unsignedTypes.Contains(type)) {#>
+			if(value < 0) return (<#= type.Name #>)0;	// Unsigned implementation
+<#		} else { #>
+			if(value < <#= type.Name #>.MinValue) return <#= type.Name #>.MinValue;	// signed implementation
+<#		} if(type!= typeof(UInt64)) {#>
+			if(value > <#= type.Name #>.MaxValue) return <#= type.Name #>.MaxValue;
+<#		}
+	}#>
+			return (<#= type.Name #>) value;
+		}
+<#
+		} #>
+	}
+}
