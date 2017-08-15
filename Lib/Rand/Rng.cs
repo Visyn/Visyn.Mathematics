@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Threading;
-using Visyn.Public.Exceptions;
+using Visyn.Exceptions;
 
 namespace Visyn.Mathematics.Rand
 {

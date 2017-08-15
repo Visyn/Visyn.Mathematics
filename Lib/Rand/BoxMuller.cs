@@ -1,6 +1,6 @@
 ﻿using System;
+using Visyn.JetBrains;
 using Visyn.Mathematics.Redzen.Numerics;
-using Visyn.Public.JetBrains;
 
 namespace Visyn.Mathematics.Rand
 {

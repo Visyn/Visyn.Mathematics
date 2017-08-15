@@ -3,8 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Xml.Serialization;
-using Visyn.Public.Geometry;
-using Visyn.Public.JetBrains;
+using Visyn.Geometry;
+using Visyn.JetBrains;
 
 namespace Visyn.Mathematics
 {

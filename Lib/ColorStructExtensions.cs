@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Visyn.Public.Mathematics;
 
 namespace Visyn.Mathematics
 {

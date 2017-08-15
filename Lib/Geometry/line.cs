@@ -1,5 +1,5 @@
 ﻿using System;
-using Visyn.Public.Geometry;
+using Visyn.Geometry;
 
 namespace Visyn.Mathematics.Geometry
 {

@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Visyn.Public.Types.Time;
+using Visyn.Types.Time;
 
 namespace Visyn.Mathematics.Collection
 {

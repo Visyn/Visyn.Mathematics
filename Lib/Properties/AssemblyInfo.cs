@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Visyn.Mathematics")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Visyn.Mathematics")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Visyn")]
 [assembly: AssemblyProduct("Visyn.Mathematics")]

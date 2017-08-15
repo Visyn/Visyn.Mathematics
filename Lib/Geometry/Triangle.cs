@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
-using Visyn.Public.Geometry;
+using Visyn.Geometry;
 
 namespace Visyn.Mathematics.Geometry
 {

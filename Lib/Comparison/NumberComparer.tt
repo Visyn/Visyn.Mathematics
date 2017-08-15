@@ -1,7 +1,7 @@
 ﻿<#@ include file="../T4/NumericTypes.ttinclude" #>
 using System.Diagnostics;
-using Visyn.Public.Comparison;
-using Visyn.Public.Exceptions;
+using Visyn.Comparison;
+using Visyn.Exceptions;
 
 namespace Visyn.Mathematics.Comparison 
 { 

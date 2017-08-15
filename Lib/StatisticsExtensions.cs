@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using Visyn.Mathematics.Comparison;
-using Visyn.Public.Reflection;
+using Visyn.Reflection;
 
 //using Visyn.Core.Comparison;
 //using Visyn.Core.Reflection;

@@ -1,6 +1,6 @@
 using System;
 using System.Threading;
-using Visyn.Public.JetBrains;
+using Visyn.JetBrains;
 
 namespace Visyn.Mathematics.Rand
 {

@@ -28,8 +28,7 @@
 #endregion
 using System;
 using Visyn.Mathematics;
-
-using Visyn.Public.Types;
+using Visyn.Types;
 
 namespace Visyn.Mathematics
 {

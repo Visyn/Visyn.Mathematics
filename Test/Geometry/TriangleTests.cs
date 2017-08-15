@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Windows;
 using NUnit.Framework;
+using Visyn.Geometry;
 using Visyn.Mathematics.Geometry;
 using Visyn.Mathematics.Rand;
-using Visyn.Public.Geometry;
 
 namespace Visyn.Mathematics.Test.Geometry
 {

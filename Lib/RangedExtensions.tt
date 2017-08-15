@@ -1,5 +1,5 @@
 ﻿<#@ include file="./T4/NumericTypes.ttinclude" #>
-using Visyn.Public.Types;
+using Visyn.Types;
 
 namespace Visyn.Mathematics
 {

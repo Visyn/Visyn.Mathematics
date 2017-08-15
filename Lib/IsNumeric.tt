@@ -1,6 +1,6 @@
 ﻿<#@ include file="./T4/NumericTypes.ttinclude" #>
 using System.Reflection;
-using Visyn.Public.Types;
+using Visyn.Types;
 
 namespace Visyn.Mathematics
 {
@@ -28,7 +28,7 @@ namespace Visyn.Mathematics
                 return genericType.IsNumeric();
 #endif
 	        }
-	        var itype = item as Visyn.Public.Types.IType;
+	        var itype = item as Visyn.Types.IType;
 	        if (itype != null) return itype.Type.IsNumeric();
 
 	        return false;
@@ -54,7 +54,7 @@ namespace Visyn.Mathematics
                 return genericType.IsNumericExtended();
 #endif
 	        }
-	        var itype = item as Visyn.Public.Types.IType;
+	        var itype = item as Visyn.Types.IType;
 	        if (itype != null) return itype.Type.IsNumericExtended();
 
 	        return false;
@@ -184,12 +184,12 @@ namespace Visyn.Mathematics
 			if (type == typeof(TimeSpan)) return ((TimeSpan)item) == TimeSpan.Zero;
 			if (type == typeof(bool)) return ((bool)item) == false;
 
-			var itype = item as Visyn.Public.Types.IType;
+			var itype = item as Visyn.Types.IType;
 			if(itype != null)
 			{
 			    if (itype.IsNumeric())
 			    {
-			        var value = item as Visyn.Public.Types.IValue;
+			        var value = item as Visyn.Types.IValue;
                     if(value != null)
                     { 
                         return value.ValueAsObject().IsZero();

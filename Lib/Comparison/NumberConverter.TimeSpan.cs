@@ -1,6 +1,6 @@
 ﻿using System;
-using Visyn.Public.Types;
-using Visyn.Public.Types.Time;
+using Visyn.Types;
+using Visyn.Types.Time;
 
 namespace Visyn.Mathematics.Comparison
 {

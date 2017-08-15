@@ -1,7 +1,7 @@
 ﻿<#@ include file="../../Lib/T4/NumericTypes.ttinclude" #>
 using System.Collections.Generic;
 using NUnit.Framework;
-using Visyn.Public.Exceptions;
+using Visyn.Exceptions;
 using Visyn.Mathematics.Comparison;
 
 namespace Visyn.Mathematics.Test.Comparison 

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Visyn.Public.Comparison;
-using Visyn.Public.Geometry;
+using Visyn.Comparison;
+using Visyn.Geometry;
 
 namespace Visyn.Mathematics.Geometry
 {
