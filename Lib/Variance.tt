@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Visyn.Core.Comparison;
+using Visyn.Comparison;
 
 namespace Visyn.Mathematics
 {

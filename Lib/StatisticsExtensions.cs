@@ -6,8 +6,8 @@ using System.Reflection;
 using Visyn.Mathematics.Comparison;
 using Visyn.Reflection;
 
-//using Visyn.Core.Comparison;
-//using Visyn.Core.Reflection;
+//using Visyn.Comparison;
+//using Visyn.Reflection;
 
 namespace Visyn.Mathematics
 {
