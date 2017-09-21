@@ -6,8 +6,6 @@ using System.Reflection;
 using Visyn.Mathematics.Comparison;
 using Visyn.Reflection;
 
-//using Visyn.Comparison;
-//using Visyn.Reflection;
 
 namespace Visyn.Mathematics
 {
@@ -77,6 +75,117 @@ namespace Visyn.Mathematics
                 result.Add(item.Key, stats);
             }
             return result;
+        }
+
+        public static T StatisticsForPropertyValues<T>(this IEnumerable<T> obj, string namePrefix = null)
+        {
+            Dictionary<string, Statistics> result;
+            var props = StatisticsForPropertyInfos(obj, namePrefix, out result);
+
+            T instance = Activator.CreateInstance<T>();
+            foreach(var prop in props)
+            {
+                prop.Value.SetValue(instance, result[prop.Key]);
+            }
+            return instance;
+        }
+        public static TOut StatisticsForPropertyValues<TEnum,TOut>(this IEnumerable<TEnum> obj, string namePrefix = null)
+        {
+            Dictionary<string, Statistics> result;
+            var enumProperties = StatisticsForPropertyInfos(obj, namePrefix, out result);
+            //var outProperties = typeof(TOut).GetTypeInfo().DeclaredProperties;
+            var outProperties = typeof(TOut).GetTypeInfo().PropertyDictionary();
+            foreach(var prop in enumProperties)
+            {
+
+            }
+            TOut instance = Activator.CreateInstance<TOut>();
+            foreach (var prop in outProperties)
+            {
+                if (prop.Value.CanWrite)
+                {
+                    if (outProperties.ContainsKey(prop.Key))
+                    {
+                        prop.Value.SetValue(instance, result[prop.Key]);
+                    }
+                }
+                //else
+                //{
+                //    if (outProperties.ContainsKey(prop.Key))
+                //    {
+                //        var outProp = outProperties[prop.Key];
+                //        outProp.SetValue(instance, result[prop.Key]);
+                //    }
+                //}
+
+            }
+            return instance;
+        }
+
+        /// <summary>
+        /// Statisticses for property infos.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="obj">The object.</param>
+        /// <param name="namePrefix">The name prefix.</param>
+        /// <param name="result">The result.</param>
+        /// <returns>Dictionary&lt;System.String, PropertyInfo&gt;.</returns>
+        private static Dictionary<string, PropertyInfo> StatisticsForPropertyInfos<T>(IEnumerable<T> obj, string namePrefix, out Dictionary<string, Statistics> result)
+        {
+            var type = typeof(T).GetTypeInfo();
+   //         var props = type.PropertyDictionary(namePrefix);  //new Dictionary<string, PropertyInfo>());
+
+   //         foreach (var property in type.DeclaredProperties)
+   //         {
+   //             if (property.PropertyType != typeof(double) &&
+   //                 property.PropertyType != typeof(int) &&
+   //                 property.PropertyType != typeof(bool) &&
+   //                 property.PropertyType != typeof(DateTime) &&
+   //                 property.PropertyType != typeof(TimeSpan)) continue;
+   //             var name = string.IsNullOrEmpty(namePrefix)
+   //                 ? property.GetDescription()
+   //                 : $"{namePrefix} {property.GetDescription()}";
+   //             props.Add(name, property);
+   ////             values.Add(name, new List<double>());
+   //         }
+            var props = type.PropertyDictionary(namePrefix);
+            var values = props.ToDictionary(prop => prop.Key, prop => new List<double>());
+            foreach (var item in obj)
+            {
+                foreach (var pi in props)
+                {
+                    var value = pi.Value.GetValue(item);
+                    values[pi.Key].Add(value as double? ??
+                                       NumberConverter.Instance.ToDouble(value));
+                }
+            }
+            result = new Dictionary<string, Statistics>(props.Count);
+            foreach (var item in values)
+            {
+                var stats = item.Value.Statistics(item.Key);
+                result.Add(item.Key, stats);
+            }
+            return props;
+        }
+
+        private static Dictionary<string,PropertyInfo> PropertyDictionary(this TypeInfo type, string namePrefix=null)
+        {
+            var props = new Dictionary<string, PropertyInfo>();
+            //var values = new Dictionary<string, List<double>>();
+            foreach (var property in type.DeclaredProperties)
+            {
+                if (property.PropertyType != typeof(double) &&
+                    property.PropertyType != typeof(int) &&
+                    property.PropertyType != typeof(bool) &&
+                    property.PropertyType != typeof(DateTime) &&
+                    property.PropertyType != typeof(TimeSpan)) continue;
+                var name = string.IsNullOrEmpty(namePrefix)
+                    ? property.GetDescription()
+                    : $"{namePrefix} {property.GetDescription()}";
+                props.Add(name, property);
+              //  values.Add(name, new List<double>());
+            }
+            return props;
         }
 
 
