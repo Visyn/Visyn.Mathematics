@@ -68,6 +68,7 @@
     </Compile>
     <Compile Include="Enumerables\EnumerableMathExtensions.cs" />
     <Compile Include="EqualsToleranced.cs" />
+    <Compile Include="Geometry\IPoint3DExtensions.cs" />
     <Compile Include="Geometry\line.cs" />
     <Compile Include="Geometry\Polygon.cs" />
     <Compile Include="Geometry\Range.cs" />

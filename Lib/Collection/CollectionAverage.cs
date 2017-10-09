@@ -7,14 +7,14 @@ namespace Visyn.Mathematics.Collection
 {
     public static class CollectionAverage
     {
-        public static double Average<T>(this ICollection collection) where T : IComparable, IComparable<T>, IEquatable<T>
+        public static double Average<T>(this IEnumerable collection) where T : IComparable, IComparable<T>, IEquatable<T>
         {
             if (typeof(T).IsNumeric()) return collection.AverageDouble();
             //if (typeof(T) == typeof(DateTime)) return collection.AverageDateTime();
             throw new NotImplementedException($"Average not implemented for Type={typeof(T)}");
         }
 
-        public static double AverageDouble(this ICollection collection)
+        public static double AverageDouble(this IEnumerable collection)
         {
             var average = 0.0;
             var count = 0;
