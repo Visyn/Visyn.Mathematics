@@ -31,6 +31,7 @@ using Visyn.Mathematics.Trigonometry;
 
 namespace Visyn.Mathematics
 {
+    // ReSharper disable once InconsistentNaming
     public static class IPointExtensions
     {
         private const double TOLERANCE = 1e-12;
