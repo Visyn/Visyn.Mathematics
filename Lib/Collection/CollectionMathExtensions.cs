@@ -129,5 +129,27 @@ namespace Visyn.Mathematics.Collection
             }
             return true;
         }
+
+        public static bool ElementsAreEquivalent<T>(this IList<T> current, IList<T> other)
+        {
+            if (current.Count != other.Count) return false;
+            for(var i=0;i<current.Count;i++)
+            {
+                if (!current[i].Equals(other[i]))
+                    return false;
+            }
+            return true;
+        }
+
+        public static bool ElementsAreEquivalent<T>(this T[] current, T[] other)
+        {
+            if (current.Length != other.Length) return false;
+            for (var i = 0; i < current.Length; i++)
+            {
+                if (!current[i].Equals(other[i]))
+                    return false;
+            }
+            return true;
+        }
     }
 }

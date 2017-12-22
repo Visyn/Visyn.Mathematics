@@ -80,7 +80,7 @@
     <Compile Include="Geometry\Triangle.cs" />
     <Compile Include="IEqualsToleranced.cs" />
     <Compile Include="INumeric.cs" />
-    <Compile Include="IPointExtensions.cs" />
+    <Compile Include="IPointExtensionsExt.cs" />
     <Compile Include="IRange.cs" />
     <Compile Include="IsNumeric.t4.cs">
       <DependentUpon>IsNumeric.tt</DependentUpon>
@@ -155,6 +155,7 @@
     <Compile Include="StatisticsExtensions.cs" />
     <Compile Include="Swap.cs" />
     <Compile Include="Trigonometry\Angle.cs" />
+    <Compile Include="ValueRange.cs" />
     <Compile Include="Variance.t4.cs">
       <DependentUpon>Variance.tt</DependentUpon>
       <AutoGen>True</AutoGen>

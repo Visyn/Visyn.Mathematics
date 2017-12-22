@@ -554,7 +554,13 @@ namespace Visyn.Mathematics
                 return hash;
             }
         }
+        #region Implementation of relational members
 
+        public int CompareTo(IPoint other) => Visyn.Geometry.IPointExtensions.CompareTo(this, other);
+
+        public int CompareTo(IPoint3D other) => IPoint3DExtensions.CompareTo(this, other);
+
+        #endregion
     }
 }
 
