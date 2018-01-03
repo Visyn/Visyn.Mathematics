@@ -5,9 +5,9 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Visyn.Mathematics", "Lib\Visyn.Mathematics.csproj", "{72010055-3D6E-4DA8-ACEE-AEF0E78E46A7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Visyn.Public", "..\..\Visyn.Public\Lib\Visyn.Public.csproj", "{ABA4963B-56BA-4B42-8C2A-17BE811E5F8E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Visyn.Public", "..\Visyn.Public\Lib\Visyn.Public.csproj", "{ABA4963B-56BA-4B42-8C2A-17BE811E5F8E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Visyn.Mathematics.Test", "Test\Visyn.Mathematics.Test\Visyn.Mathematics.Test.csproj", "{8EDF4429-251A-416D-BB68-93F227191BCF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Visyn.Mathematics.Test", "Test\Visyn.Mathematics.Test.csproj", "{8EDF4429-251A-416D-BB68-93F227191BCF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
