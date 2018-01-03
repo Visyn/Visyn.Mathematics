@@ -1,7 +1,7 @@
-#region Copyright (c) 2015-2017 Visyn
+#region Copyright (c) 2015-2018 Visyn
 // The MIT License(MIT)
 // 
-// Copyright(c) 2015-2017 Visyn
+// Copyright (c) 2015-2018 Visyn
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -110,6 +110,33 @@ namespace Visyn.Mathematics.Enumerables
             }
         }
 
+        public static IEnumerable<int> Multiply(this IEnumerable<int> a, int b) => a.Select(i => i * b);
+
+        public static IEnumerable<int> Multiply(this IEnumerable<int> a, IEnumerable<int> b)
+        {
+            using (var enumA = a.GetEnumerator())
+            {
+                using (var enumB = b.GetEnumerator())
+                {
+                    var aNext = enumA.MoveNext();
+                    var bNext = enumB.MoveNext();
+                    while (aNext && bNext)
+                    {
+                        yield return enumA.Current * enumB.Current;
+                        aNext = enumA.MoveNext();
+                        bNext = enumB.MoveNext();
+                    }
+                    if (aNext == bNext) yield break;
+                    // Lengths are different
+                    if (aNext)
+                        do { yield return 0; }
+                        while (enumA.MoveNext()); // a * 0.0
+                    else
+                        do { yield return 0; }
+                        while (enumB.MoveNext());// 0.0 * b
+                }
+            }
+        }
         public static IEnumerable<double> Multiply(this IEnumerable<double> a, double b) => a.Select(i => i * b);
         public static IEnumerable<double> Multiply(this IEnumerable<int> a, double b) => a.Select(i => i * b);
 
@@ -173,6 +200,7 @@ namespace Visyn.Mathematics.Enumerables
                 }
             }
         }
+
         public static IEnumerable<double> Squared<T>(this IEnumerable<T> a) 
             => a.Select(item => Convert.ToDouble(item)).Select(value => value * value);
 

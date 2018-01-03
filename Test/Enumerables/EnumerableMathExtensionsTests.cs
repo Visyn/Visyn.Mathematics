@@ -42,6 +42,11 @@ namespace Visyn.Mathematics.Test.Enumerables
         private double[] A4 = { 1.0, 2.0, 3.0 ,4.0};
         private double[] AplusTiny = { 1.0+EPSILON/4.0, 2.0 + EPSILON / 4.0, 3.0 + EPSILON / 4.0 };
 
+        private int[] Aints => A.Select(a => (int) a).ToArray();
+        private int[] Bints => B.Select(b => (int)b).ToArray();
+        private int[] Cints => C.Select(c => (int)c).ToArray();
+        private int[] A4ints => A4.Select(a4 => (int)a4).ToArray();
+
         [Test]
         public void AddTests()
         {
@@ -79,21 +84,76 @@ namespace Visyn.Mathematics.Test.Enumerables
         }
 
         [Test]
-        public void MultiplyTests()
+        public void MultiplyIntsTests()
+        {
+            VerifyMultiplication(3, Aints, Bints, Aints.Multiply(Bints), "A * B");
+            VerifyMultiplication(3, Bints, Aints, Bints.Multiply(Aints), "B * A");
+            VerifyMultiplication(4, Aints, Cints, Aints.Multiply(Cints), "A * C");
+            VerifyMultiplication(4, Cints, Bints, Cints.Multiply(Bints), "C * B");
+        }
+
+        [Test]
+        public void MultiplyConstantIntsTests()
+        {
+            VerifyMultiplication(3, Aints, 7, Aints.Multiply(7), "A * 7");
+            VerifyMultiplication(3, Bints, 9, Bints.Multiply(9), "B * 9.2");
+            VerifyMultiplication(3, Aints, -88, Aints.Multiply(-88), "A * -88");
+            VerifyMultiplication(4, Cints, (int)17.26, Cints.Multiply(17), "C * 17.26");
+        }
+        [Test]
+        public void MultiplyIntsByDoubleTests()
+        {
+            VerifyMultiplication(3, Aints, Bints, Aints.Multiply(Bints), "A * B");
+            VerifyMultiplication(3, Bints, Aints, Bints.Multiply(Aints), "B * A");
+            VerifyMultiplication(4, Aints, Cints, Aints.Multiply(Cints), "A * C");
+            VerifyMultiplication(4, Cints, Bints, Cints.Multiply(Bints), "C * B");
+        }
+
+        [Test]
+        public void MultiplyIntsByConstantDoubleTests()
+        {
+            VerifyMultiplication(3, A, 7.0, Aints.Multiply(7.0), "A * 7");
+            VerifyMultiplication(3, B, 9.7, Bints.Multiply(9.7), "B * 9.2");
+            VerifyMultiplication(3, A, -88.0, Aints.Multiply(-88.0), "A * -88");
+            VerifyMultiplication(4, C, 17.26, Cints.Multiply(17.26), "C * 17.26");
+        }
+
+        [Test]
+        public void MultiplyDoublesTests()
         {
             VerifyMultiplication(3, A, B, A.Multiply(B), "A * B");
             VerifyMultiplication(3, B, A, B.Multiply(A), "B * A");
             VerifyMultiplication(4, A, C, A.Multiply(C), "A * C");
             VerifyMultiplication(4, C, B, C.Multiply(B), "C * B");
         }
+
         [Test]
-        public void MultiplyConstantTests()
+        public void MultiplyConstantDoublesTests()
         {
             VerifyMultiplication(3, A, 7, A.Multiply(7), "A * 7");
             VerifyMultiplication(3, B, 9.2, B.Multiply(9.2), "B * 9.2");
             VerifyMultiplication(3, A, -88, A.Multiply(-88), "A * -88");
             VerifyMultiplication(4, C, 17.26, C.Multiply(17.26), "C * 17.26");
         }
+
+        [Test]
+        public void SquareIntsTests()
+        {
+            VerifyMultiplication(3, A, A, Aints.Squared<int>(), "A.Squared");
+            VerifyMultiplication(3, B, B, Bints.Squared(), "B.Squared");
+            VerifyMultiplication(4, C, C, Cints.Squared(), "C.Squared");
+            VerifyMultiplication(4, A4, A4, A4ints.Squared(), "A4.Squared");
+        }
+
+        [Test]
+        public void SquareDoublesTests()
+        {
+            VerifyMultiplication(3, A, A, A.Squared(), "A.Squared");
+            VerifyMultiplication(3, B, B, B.Squared(), "B.Squared");
+            VerifyMultiplication(4, C, C, C.Squared(), "C.Squared");
+            VerifyMultiplication(4, A4, A4, A4.Squared(), "A4.Squared");
+        }
+
 
         [Test]
         public void DivideTests()
@@ -243,6 +303,29 @@ namespace Visyn.Mathematics.Test.Enumerables
                 Assert.AreEqual(a[i] - b, list[i], EPSILON, $"{message} [{i}] : {a[i]}-{b}={list[i]}");
             }
         }
+        private void VerifyMultiplication(int expectedCount, int[] a, int[] b, IEnumerable<int> result, string message)
+        {
+            var list = result.ToList();
+            Assert.AreEqual(expectedCount, list.Count, message);
+            for (var i = 0; i < Math.Max(a.Length, b.Length); i++)
+            {
+                var da = i < a.Length ? a[i] : 0.0;
+                var db = i < b.Length ? b[i] : 0.0;
+                Assert.AreEqual(da * db, list[i], EPSILON, $"{message} [{i}] : {da}*{db}={list[i]}");
+            }
+        }
+
+        private void VerifyMultiplication(int expectedCount, int[] a, int b, IEnumerable<int> result, string message)
+        {
+            var list = result.ToList();
+            Assert.AreEqual(expectedCount, list.Count, message);
+
+            for (var i = 0; i < a.Length; i++)
+            {
+                Assert.AreEqual(a[i] * b, list[i], EPSILON, $"{message} [{i}] : {a[i]}*{b}={list[i]}");
+            }
+        }
+
         private void VerifyMultiplication(int expectedCount, double[] a, double[] b, IEnumerable<double> result, string message)
         {
             var list = result.ToList();
@@ -254,6 +337,7 @@ namespace Visyn.Mathematics.Test.Enumerables
                 Assert.AreEqual(da * db, list[i], EPSILON, $"{message} [{i}] : {da}*{db}={list[i]}");
             }
         }
+
         private void VerifyMultiplication(int expectedCount, double[] a, double b, IEnumerable<double> result, string message)
         {
             var list = result.ToList();

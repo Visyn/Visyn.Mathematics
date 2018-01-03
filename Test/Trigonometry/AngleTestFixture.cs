@@ -52,7 +52,7 @@ namespace Visyn.Mathematics.Test.Trigonometry
             Assert.AreEqual(-Math.PI / 2.0, Angle.ToRadians(-90));
             Assert.AreEqual(-Math.PI, Angle.ToRadians(-180));
         }
-
+        [Test]
         public void TestRadiansToDegrees()
         {
             // Note 
