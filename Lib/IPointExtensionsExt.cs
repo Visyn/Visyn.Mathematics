@@ -40,7 +40,7 @@ namespace Visyn.Mathematics
 
         public static PointXY Scale(this IPoint p1, IPoint p2) => new PointXY(p1.X*p2.X,p1.Y*p2.Y);
 
-        public static PointXY Scale(this IPoint p1, Size p2) => new PointXY(p1.X * p2.Height, p1.Y * p2.Width);
+        public static PointXY Scale(this IPoint p1, Size p2) => new PointXY(p1.X * p2.Width, p1.Y * p2.Height);
 
         public static PointXY Average(this IEnumerable<IPoint> points)
         {
