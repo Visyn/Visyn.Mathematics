@@ -17,6 +17,7 @@
     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <AssemblyVersion>2.1.23.22</AssemblyVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -163,11 +164,6 @@
     </Compile>
     <Compile Include="Vector3D.cs" />
     <Compile Include="Types\Vector3DConverter.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="WindowsBase">
-      <HintPath>C:\Windows\Microsoft.NET\Framework\v4.0.30319\WPF\WindowsBase.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Visyn.Public\Lib\Visyn.Public.csproj">
