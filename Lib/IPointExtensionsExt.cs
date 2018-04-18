@@ -166,7 +166,7 @@ namespace Visyn.Mathematics
             {
                 if (typeof(T) == typeof(double)) return (new[] {point.X,point.Y}).ToList();
                 if (typeof(T) == typeof(object)) return (new object[] { point.X, point.Y }).ToList();
-                if (typeof(T) == typeof(double)) return (new string[] { point.X.ToString(), point.Y.ToString() }).ToList();
+                if (typeof(T) == typeof(string)) return (new string[] { point.X.ToString(), point.Y.ToString() }).ToList();
                 throw new NotSupportedException($"IPoint.ToList() requires convert function to create a list of type '{typeof(T).Name}'");
             }
             var list = new List<T> {convertFunc(point.X), convertFunc(point.Y)};

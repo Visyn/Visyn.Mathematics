@@ -5,8 +5,21 @@ namespace Visyn.Mathematics
 { 
 	public static partial class Numbers
 	{
+		/// <summary>
+	    /// Return the minimum value for the specified type
+        /// </summary>
+        /// <returns>Minimum value for the specified type</returns>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static T MinValue<T>() where T : INumeric<T>
+		{ 
 <# foreach (var type in numbericTypes) { #>
-        /// <summary>
+			if(typeof(T) == typeof(<#= type.Name #>)) return (T)(object)(<#= type.Name #>.MinValue);
+<#}#>
+			throw new NotImplementedException($"{nameof(MinValue)} not implemented for type {typeof(T).Name}");
+		}
+
+<# foreach (var type in numbericTypes) { #>
+		/// <summary>
         /// Return the minimum of two values
         /// </summary>
         /// <param name="a">First value</param>

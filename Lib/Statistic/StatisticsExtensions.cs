@@ -30,7 +30,6 @@ using System.Reflection;
 using Visyn.Mathematics.Comparison;
 using Visyn.Reflection;
 
-
 namespace Visyn.Mathematics
 {
     public static class StatisticsExtensions //: IEqualsToleranced<>

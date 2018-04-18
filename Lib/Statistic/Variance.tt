@@ -1,10 +1,9 @@
 ﻿<#@ include file="../T4/NumericTypes.ttinclude" #>
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Visyn.Comparison;
+using Visyn.Mathematics.Comparison;
 
-namespace Visyn.Mathematics
+namespace Visyn.Mathematics.Statistic
 {
 	public static partial class MathExtensions
 	{
@@ -64,6 +63,9 @@ namespace Visyn.Mathematics
 
 		/// <summary>
         /// Calculates the variance of the specified collection
+		/// This is a numerically stable algorithm for the sample variance. 
+		/// It also computes the mean. This algorithm was found by Welford, and it has been thoroughly analyzed
+		/// https://en.wikipedia.org/wiki/Algorithms_for_calculating_variance#Online_algorithm
         /// </summary>
         /// <param name="numbers">The numbers to calculate variance of.</param>
 		/// <param name="average">Average of the collection</param>
@@ -87,6 +89,9 @@ namespace Visyn.Mathematics
 
 		/// <summary>
         /// Calculates the variance of the specified collection
+		/// This is a numerically stable algorithm for the sample variance. 
+		/// It also computes the mean. This algorithm was found by Welford, and it has been thoroughly analyzed
+		/// https://en.wikipedia.org/wiki/Algorithms_for_calculating_variance#Online_algorithm
         /// </summary>
         /// <param name="numbers">The numbers to calculate variance of.</param>
 		/// <param name="name">Name of the statistics</param>

@@ -5,6 +5,18 @@ namespace Visyn.Mathematics
 { 
 	public static partial class Numbers
 	{
+		/// <summary>
+	    /// Return the maximum value for the specified type
+        /// </summary>
+        /// <returns>Maximum value for the specified type</returns>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static T MaxValue<T>() where T : INumeric<T>
+		{ 
+<# foreach (var type in numbericTypes) { #>
+			if(typeof(T) == typeof(<#= type.Name #>)) return (T)(object)(<#= type.Name #>.MaxValue);
+<#}#>
+			throw new NotImplementedException($"{nameof(MaxValue)} not implemented for type {typeof(T).Name}");
+		}
 <# foreach (var type in numbericTypes) { #>
         /// <summary>
         /// Return the maximum of two values

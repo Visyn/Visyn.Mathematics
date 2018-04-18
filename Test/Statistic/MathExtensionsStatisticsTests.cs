@@ -29,7 +29,7 @@ using NUnit.Framework;
 using Visyn.Collection;
 using Visyn.Mathematics.Rand;
 
-namespace Visyn.Mathematics.Test
+namespace Visyn.Mathematics.Test.Statistic
 {
     [TestFixture]
     public class MathExtensionsStatisticsTests

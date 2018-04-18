@@ -26,9 +26,10 @@ using System;
 using System.Linq;
 using System.Threading;
 using NUnit.Framework;
+using Visyn.Collection;
 using Visyn.Mathematics.Rand;
 
-namespace Visyn.Mathematics.Test
+namespace Visyn.Mathematics.Test.Statistic
 {
     [TestFixture]
     public class StatisticsTests
@@ -38,7 +39,7 @@ namespace Visyn.Mathematics.Test
         private readonly IRandom _rng;
 
         private IRandom rng => _rng ?? Rng<BoxMuller>.ThreadSafeRandom(null, Thread.CurrentThread.ManagedThreadId);
-#if false
+#if true
         [Test]
         public void MeanTest()
         {
@@ -176,6 +177,19 @@ namespace Visyn.Mathematics.Test
                 Assert.That(statistics.StandardDeviation / refereneStdDev, Is.EqualTo(1.0).Within(EPSILON),
                     $"Visyn.Mathematics.Statistics.StandardDeviation {statistics.StandardDeviation} != MathNet StandardDeviation {refereneStdDev}");
             }
+            {
+                // Verify Min calculation
+                var referenceMinimum = MathNet.Numerics.Statistics.Statistics.Minimum(doubleList);
+                Assert.That(statistics.Min / referenceMinimum, Is.EqualTo(1.0).Within(EPSILON),
+                    $"RollingStatistics<double>.Min {statistics.StandardDeviation} != MathNet StandardDeviation {referenceMinimum}");
+            }
+            {
+                // Verify Max calculation
+                var referenceMaximum = MathNet.Numerics.Statistics.Statistics.Maximum(doubleList);
+                Assert.That(statistics.Max / referenceMaximum, Is.EqualTo(1.0).Within(EPSILON),
+                    $"RollingStatistics<double>.Max {statistics.StandardDeviation} != MathNet StandardDeviation {referenceMaximum}");
+ 
+            }
         }
         [Test]
         public void StatisticsOfIntListTest()
@@ -203,6 +217,18 @@ namespace Visyn.Mathematics.Test
                 var refereneStdDev = MathNet.Numerics.Statistics.Statistics.StandardDeviation(doubleList);
                 Assert.That(statistics.StandardDeviation / refereneStdDev, Is.EqualTo(1.0).Within(EPSILON),
                     $"Visyn.Mathematics.Statistics.StandardDeviation {statistics.StandardDeviation} != MathNet StandardDeviation {refereneStdDev}");
+            }
+			{
+                // Verify Min calculation
+                var referenceMinimum = MathNet.Numerics.Statistics.Statistics.Minimum(doubleList);
+                Assert.That(statistics.Min / referenceMinimum, Is.EqualTo(1.0).Within(EPSILON),
+                    $"Visyn.Mathematics.Statistics.Min {statistics.StandardDeviation} != MathNet StandardDeviation {referenceMinimum}");
+            }
+            {
+                // Verify Max calculation
+                var referenceMaximum = MathNet.Numerics.Statistics.Statistics.Maximum(doubleList);
+                Assert.That(statistics.Max / referenceMaximum, Is.EqualTo(1.0).Within(EPSILON),
+                    $"Visyn.Mathematics.Statistics.Max {statistics.StandardDeviation} != MathNet StandardDeviation {referenceMaximum}");
             }
         }
 

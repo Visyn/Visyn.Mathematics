@@ -60,7 +60,7 @@ namespace Visyn.Mathematics
         public static double StdDev(this IEnumerable<double> numbers)
         {
             double ave;
-            return Math.Sqrt(Variance(numbers, out ave));
+            return Math.Sqrt(MathExtensions.Variance(numbers, out ave));
         }
 
         /// <summary>
@@ -73,7 +73,7 @@ namespace Visyn.Mathematics
         {
             double ave;
             var doubles = numbers.ToDoubles<T>();
-            return Math.Sqrt(Variance(doubles,out ave));
+            return Math.Sqrt(MathExtensions.Variance(doubles,out ave));
         }
     }
 }
