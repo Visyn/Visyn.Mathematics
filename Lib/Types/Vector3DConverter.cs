@@ -30,21 +30,35 @@ using Visyn.Types;
 
 namespace Visyn.Mathematics.Types
 {
-    public class Vector3DConverter : IFieldConverter
+    public class Vector3DConverter : IFieldConverter, IFieldConverterHeader
     {
-        private readonly char delimiter = ',';
+#if DEBUG
+        public string Delimiter { get; set; } = "@";
+#else
+        public string Delimiter { get; set; } = ",";
+#endif
 
         #region Implementation of IFieldConverter
-
         public bool CustomNullHandling => true;
 
         public Type Type => typeof(Vector3D);
 
         #endregion
 
+        private readonly string[] _columnHeaderPrefix;
+
+        public Vector3DConverter(string columnHeaderPrefix) : 
+            this(new[] { $"{columnHeaderPrefix} X", $"{columnHeaderPrefix} Y", $"{columnHeaderPrefix} Z" }) { }
+
+        public Vector3DConverter(string[] columnHeaderPrefixes=null)
+        {
+            _columnHeaderPrefix = columnHeaderPrefixes?.Length == 3 ? columnHeaderPrefixes : new[] {"X", "Y", "Z"};
+        }
+
         public object StringToField(string text)
         {
-            var split = text.Split(new[] { delimiter },StringSplitOptions.RemoveEmptyEntries);
+            Debug.Assert(!Delimiter.Equals("@"));
+            var split = text.Split(new[] { Delimiter },StringSplitOptions.RemoveEmptyEntries);
             Debug.Assert(split.Length % 3 == 0);
             var length = split.Length / 3;
             return length == 1 ? CreateVector(split) : CreateVectors(length, split);
@@ -56,18 +70,18 @@ namespace Visyn.Mathematics.Types
             var vectors = fieldValue as Vector3D[];
             if (vectors != null)
             {
-                return string.Join(delimiter.ToString(), vectors.Select(FieldToString));
+                return string.Join(Delimiter.ToString(), vectors.Select(FieldToString));
             }
             var list = fieldValue as IList<Vector3D>;
             if (list != null)
             {
-                return string.Join(delimiter.ToString(), list.Select(FieldToString));
+                return string.Join(Delimiter.ToString(), list.Select(FieldToString));
             }
             Debug.Assert(false,$"Unhandled conversion type {fieldValue.GetType()}");
             return "";
         }
 
-        public string FieldToString(Vector3D fieldValue) => $"{fieldValue.X}{delimiter}{fieldValue.Y}{delimiter}{fieldValue.Z}{delimiter}";
+        private string FieldToString(Vector3D fieldValue) => $"{fieldValue.X}{Delimiter}{fieldValue.Y}{Delimiter}{fieldValue.Z}";
 
 
         private static object CreateVectors(int length, string[] split)
@@ -84,5 +98,14 @@ namespace Visyn.Mathematics.Types
             => new Vector3D(new[]
                 { double.Parse(split[offset]), double.Parse(split[offset + 1]), double.Parse(split[offset + 2])});
 
+
+        #region Implementation of IFieldConverterHeader
+        public string GetHeaderText(string delimiter=null)
+        {
+            if (string.IsNullOrEmpty(delimiter)) delimiter = Delimiter;
+            return string.Join(delimiter, _columnHeaderPrefix);
+        }
+
+        #endregion
     }
 }

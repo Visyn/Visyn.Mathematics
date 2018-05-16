@@ -28,7 +28,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using Visyn.Geometry;
-using Visyn.Mathematics.Trigonometry;
 
 namespace Visyn.Mathematics
 {
@@ -191,7 +190,7 @@ namespace Visyn.Mathematics
         }
 
         public static double AngleRadians(this IPoint a, IPoint b) => (a.Y - b.Y == 0) ? double.NaN : Math.Atan2((a.Y - b.Y) ,(a.X - b.X));
-        public static double AngleDegrees(this IPoint a, IPoint b) => Angle.ToDegrees(AngleRadians (a,b));//* (180.0/Math.PI)));
+        public static double AngleDegrees(this IPoint a, IPoint b) => AngleRadians(a,b)* (180.0/Math.PI);
 
         // x1* x2 +y1 * y2
         public static double DotProduct(this IPoint p1, IPoint p2) => p1.X*p2.X + p1.Y*p2.Y;
