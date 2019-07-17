@@ -26,7 +26,6 @@ using System;
 using System.Linq;
 using System.Threading;
 using NUnit.Framework;
-using Visyn.Collection;
 using Visyn.Mathematics.Rand;
 
 namespace Visyn.Mathematics.Test.Statistic
@@ -83,22 +82,22 @@ namespace Visyn.Mathematics.Test.Statistic
             {
                 // test doubles
                 var threadId = Thread.CurrentThread.ManagedThreadId;
-                var doubleEnumerable = rng.InclusiveList(-1e12, 1e12, Count).ToEnumerable<double, double>();
-                Assert.NotNull(doubleEnumerable, $"MeanTest: DoubleList is null!");
+                var doubleList = rng.InclusiveList(-1e12, 1e12, Count).ToList();
+                Assert.NotNull(doubleList, $"MeanTest: DoubleList is null!");
                 //          Assert.AreEqual(doubleList.Count, count, $"doubleList.Count {doubleList.Count} != {count}");
-                var reference = MathNet.Numerics.Statistics.ArrayStatistics.Mean(doubleEnumerable.ToArray());
-                var referenceStreaming = MathNet.Numerics.Statistics.StreamingStatistics.Mean(doubleEnumerable);
+                var reference = MathNet.Numerics.Statistics.ArrayStatistics.Mean(doubleList.ToArray());
+                var referenceStreaming = MathNet.Numerics.Statistics.StreamingStatistics.Mean(doubleList);
                 Assert.AreEqual(reference / referenceStreaming, 1.0, EPSILON);
-                var listMean = MathExtensions.Mean(doubleEnumerable);
+                var listMean = MathExtensions.Mean(doubleList);
                 Assert.That(listMean / reference, Is.EqualTo(1.0).Within(EPSILON),
                     $"MathExtensions.Mean {listMean} != MathNet Mean {reference} Difference: {listMean - reference}");
-                listMean = doubleEnumerable.Mean();
+                listMean = doubleList.Mean();
                 Assert.That(listMean / reference, Is.EqualTo(1.0).Within(EPSILON),
                     $"Extension method MathExtensions.Mean {listMean} != MathNet Mean {reference} Difference: {listMean - reference}");
             }
             {
                 // test ints
-                var intList = rng.InclusiveList(int.MaxValue / 10, int.MinValue / 10, Count).ToEnumerable<int, int>();
+                var intList = rng.InclusiveList(int.MaxValue / 10, int.MinValue / 10, Count).ToList();
                 ;
                 var doubleList = intList.Select(i => ((IConvertible) i).ToDouble(null));
                 Assert.NotNull(intList, $"MeanTest: intList is null!");

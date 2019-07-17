@@ -1,13 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28922.388
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Visyn.Mathematics", "Lib\Visyn.Mathematics.csproj", "{72010055-3D6E-4DA8-ACEE-AEF0E78E46A7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Visyn.Public", "..\Visyn.Public\Lib\Visyn.Public.csproj", "{ABA4963B-56BA-4B42-8C2A-17BE811E5F8E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Visyn.Mathematics.Test", "Test\Visyn.Mathematics.Test.csproj", "{8EDF4429-251A-416D-BB68-93F227191BCF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Visyn.Mathematics.Test", "Test\Visyn.Mathematics.Test.csproj", "{C43C586A-D9ED-449C-8D5C-F4BFAEDB6AB5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,16 +33,19 @@ Global
 		{ABA4963B-56BA-4B42-8C2A-17BE811E5F8E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{ABA4963B-56BA-4B42-8C2A-17BE811E5F8E}.Release|x64.ActiveCfg = Release|x64
 		{ABA4963B-56BA-4B42-8C2A-17BE811E5F8E}.Release|x64.Build.0 = Release|x64
-		{8EDF4429-251A-416D-BB68-93F227191BCF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8EDF4429-251A-416D-BB68-93F227191BCF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8EDF4429-251A-416D-BB68-93F227191BCF}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{8EDF4429-251A-416D-BB68-93F227191BCF}.Debug|x64.Build.0 = Debug|Any CPU
-		{8EDF4429-251A-416D-BB68-93F227191BCF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8EDF4429-251A-416D-BB68-93F227191BCF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8EDF4429-251A-416D-BB68-93F227191BCF}.Release|x64.ActiveCfg = Release|Any CPU
-		{8EDF4429-251A-416D-BB68-93F227191BCF}.Release|x64.Build.0 = Release|Any CPU
+		{C43C586A-D9ED-449C-8D5C-F4BFAEDB6AB5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C43C586A-D9ED-449C-8D5C-F4BFAEDB6AB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C43C586A-D9ED-449C-8D5C-F4BFAEDB6AB5}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C43C586A-D9ED-449C-8D5C-F4BFAEDB6AB5}.Debug|x64.Build.0 = Debug|Any CPU
+		{C43C586A-D9ED-449C-8D5C-F4BFAEDB6AB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C43C586A-D9ED-449C-8D5C-F4BFAEDB6AB5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C43C586A-D9ED-449C-8D5C-F4BFAEDB6AB5}.Release|x64.ActiveCfg = Release|Any CPU
+		{C43C586A-D9ED-449C-8D5C-F4BFAEDB6AB5}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {35570F52-5155-4010-9BA4-4C2A00B11F56}
 	EndGlobalSection
 EndGlobal

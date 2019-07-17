@@ -27,7 +27,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using NUnit.Framework;
-using Visyn.Collection;
 using Visyn.Mathematics.Rand;
 // ReSharper disable PossibleMultipleEnumeration
 
@@ -89,37 +88,37 @@ namespace Visyn.Mathematics.Test.Statistic
             {
                 // test doubles
                 var threadId = Thread.CurrentThread.ManagedThreadId;
-                var doubleEnumerable = rng.InclusiveList(-1e12, 1e12, Count).ToEnumerable<double, double>();
-                Assert.NotNull(doubleEnumerable, $"MeanTest: DoubleList is null!");
+                var doubleList = rng.InclusiveList(-1e12, 1e12, Count).ToList();
+                Assert.NotNull(doubleList, $"MeanTest: DoubleList is null!");
                 //          Assert.AreEqual(doubleList.Count, count, $"doubleList.Count {doubleList.Count} != {count}");
-                var reference = MathNet.Numerics.Statistics.ArrayStatistics.Mean(doubleEnumerable.ToArray());
-                var referenceStreaming = MathNet.Numerics.Statistics.StreamingStatistics.Mean(doubleEnumerable);
+                var reference = MathNet.Numerics.Statistics.ArrayStatistics.Mean(doubleList.ToArray());
+                var referenceStreaming = MathNet.Numerics.Statistics.StreamingStatistics.Mean(doubleList);
                 Assert.AreEqual(reference / referenceStreaming, 1.0, EPSILON);
 
-                var stats = new RollingStatistics<double>(doubleEnumerable);
+                var stats = new RollingStatistics<double>(doubleList);
                 Assert.That(stats.Mean / reference, Is.EqualTo(1.0).Within(EPSILON),
                     $"RollingStatistics<double> {stats.Mean} != MathNet Mean {reference} Difference: {stats.Mean - reference}");
                 stats = new RollingStatistics<double>();
-                stats.Add(doubleEnumerable);
+                stats.Add(doubleList);
                 Assert.That(stats.Mean / reference, Is.EqualTo(1.0).Within(EPSILON),
                     $"RollingStatistics<double> {stats.Mean} != MathNet Mean {reference} Difference: {stats.Mean - reference}");
             }
             {
                 // test ints
-                var intEnumerables = rng.InclusiveList(int.MaxValue / 10, int.MinValue / 10, Count).ToEnumerable<int, int>();
+                var intList = rng.InclusiveList(int.MaxValue / 10, int.MinValue / 10, Count).ToList();
                 ;
-                var doubleList = intEnumerables.Select(i => ((IConvertible) i).ToDouble(null));
-                Assert.NotNull(intEnumerables, $"MeanTest: intList is null!");
+                var doubleList = intList.Select(i => ((IConvertible) i).ToDouble(null));
+                Assert.NotNull(intList, $"MeanTest: intList is null!");
                 //               Assert.AreEqual(intList.Count, 100, $"intList.Count {intList.Count} != {count}");
                 var reference = MathNet.Numerics.Statistics.ArrayStatistics.Mean(doubleList.ToArray());
                 var referenceStreaming = MathNet.Numerics.Statistics.StreamingStatistics.Mean(doubleList);
                 Assert.AreEqual(reference / referenceStreaming, 1.0, EPSILON);
 
-                var stats = new RollingStatistics<int>(intEnumerables);
+                var stats = new RollingStatistics<int>(intList);
                 Assert.That(stats.Mean / reference, Is.EqualTo(1.0).Within(EPSILON),
                     $"RollingStatistics<double> {stats.Mean} != MathNet Mean {reference} Difference: {stats.Mean - reference}");
                 stats = new RollingStatistics<int>();
-                stats.Add(intEnumerables);
+                stats.Add(intList);
                 Assert.That(stats.Mean / reference, Is.EqualTo(1.0).Within(EPSILON),
                     $"RollingStatistics<double> {stats.Mean} != MathNet Mean {reference} Difference: {stats.Mean - reference}");
             }
